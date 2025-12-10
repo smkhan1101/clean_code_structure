@@ -15,6 +15,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final void Function()? onTap;
+  final int? maxLines;
 
   const CustomTextField(
       {this.controller,
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
       this.onTap,
       this.prefixIcon,
       this.suffixIcon,
+      this.maxLines,
       super.key});
 
   @override
@@ -60,6 +62,7 @@ class CustomTextField extends StatelessWidget {
             keyboardType: keyboardType,
             textInputAction: textInputAction,
             onTap: onTap,
+            maxLines: maxLines ?? 1,
             decoration: InputDecoration(
               prefixIcon: prefixIcon != null
                   ? Icon(prefixIcon, size: 20.sp, color: Theme.of(context).hintColor)

@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "902874816476",
+        "project_id": "rypstick-new",
+        "storage_bucket": "rypstick-new.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:902874816476:android:41455a7e46cea8751df919",
+                "android_client_info": {
+                    "package_name": "com.example.flutteranadconda"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyB9GNC7nkcHFB1roO-r-_9YI1Hi0ADCSMo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

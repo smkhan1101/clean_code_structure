@@ -4,5 +4,6 @@ class SharedKeys {
   static const String languageCode = 'language_code';
   static const String onBoardingSkip = 'on_boarding_skip';
   static const String token = 'token';
+  static const String userEmail = 'user_email';
   static const String localizationKey = 'localization';
 }

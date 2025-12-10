@@ -21,6 +21,8 @@ extension AppText on BuildContext {
 
   TextStyle get font16 => Theme.of(this).textTheme.bodyLarge!;
 
+  TextStyle get font15 => Theme.of(this).textTheme.bodyMedium!.copyWith(fontSize: 15);
+
   TextStyle get font14 => Theme.of(this).textTheme.bodyMedium!;
 
   TextStyle get font12 => Theme.of(this).textTheme.bodySmall!;
@@ -30,4 +32,6 @@ extension AppText on BuildContext {
   TextStyle get font8 => Theme.of(this).textTheme.labelMedium!;
 
   TextStyle get font6 => Theme.of(this).textTheme.labelSmall!;
+
+  TextStyle get font48 => Theme.of(this).textTheme.displayLarge!.copyWith(fontSize: 48);
 }
