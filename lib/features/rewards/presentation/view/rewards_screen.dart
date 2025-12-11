@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:startup_repo/imports.dart';
 import '../controller/rewards_controller.dart';
 import '../../../../core/widgets/loading.dart';
@@ -18,18 +19,19 @@ class RewardsScreen extends StatelessWidget {
               SafeArea(
                 child: Column(
                   children: [
-                    SizedBox(height: 15.sp),
+                    SizedBox(height: 20.h),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
+                      padding: EdgeInsets.symmetric(horizontal: 20.sp),
                       child: Text(
                         'rewards'.tr,
-                        style: context.font30.copyWith(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32.sp,
                           fontWeight: FontWeight.bold,
-                          color: Get.theme.colorScheme.surface,
                         ),
                       ),
                     ),
-                    SizedBox(height: 15.sp),
+                    SizedBox(height: 24.h),
                     Expanded(
                       child: controller.isLoading
                           ? Center(child: Loading())
@@ -59,25 +61,73 @@ class RewardsScreen extends StatelessWidget {
               ),
               if (!controller.isProPlan)
                 Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
-                    child: Center(
-                      child: Card(
-                        margin: EdgeInsets.all(20.sp),
-                        child: Padding(
-                          padding: EdgeInsets.all(20.sp),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                    child: Container(
+                      color: Colors.black.withOpacity(0.2),
+                      child: Center(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                          padding: EdgeInsets.all(24.sp),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                'upgrade_to_pro'.tr,
-                                style: context.font18.copyWith(fontWeight: FontWeight.bold),
+                                'This is a Pro feature',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 16.sp),
-                              PrimaryButton(
-                                text: 'upgrade_now'.tr,
-                                onPressed: () => Get.toNamed('/paywall'),
+                              Text(
+                                'Get the most out of your Rypstick training, at 50% off',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: 24.sp),
+                              Container(
+                                width: double.infinity,
+                                height: 56.h,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color(0xFF5CBF60),
+                                      Color(0xFF4CAF50),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () => Get.toNamed('/paywall'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    elevation: 0,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Upgrade to Pro',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -201,4 +251,3 @@ class RewardsScreen extends StatelessWidget {
     );
   }
 }
-

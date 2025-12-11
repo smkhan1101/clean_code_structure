@@ -1,8 +1,8 @@
+import 'dart:ui';
 import 'package:startup_repo/imports.dart';
 import '../controller/feed_controller.dart';
 import '../../data/model/post_model.dart';
 import '../../../../core/widgets/loading.dart';
-import '../../../../core/design/app_padding.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 
 class FeedScreen extends StatelessWidget {
@@ -29,27 +29,73 @@ class FeedScreen extends StatelessWidget {
                 ),
                 if (!controller.isProPlan)
                   Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: Center(
-                        child: Card(
-                          margin: EdgeInsets.all(20.sp),
-                          child: Padding(
-                            padding: EdgeInsets.all(20.sp),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                      child: Container(
+                        color: Colors.black.withOpacity(0.2),
+                        child: Center(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20.sp),
+                            padding: EdgeInsets.all(24.sp),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900],
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'upgrade_to_pro'.tr,
-                                  style: context.font18.copyWith(
+                                  'This is a Pro feature',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: 16.sp),
-                                PrimaryButton(
-                                  text: 'upgrade_now'.tr,
-                                  onPressed: () => Get.toNamed('/paywall'),
+                                Text(
+                                  'Get the most out of your Rypstick training, at 50% off',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.sp,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 24.sp),
+                                Container(
+                                  width: double.infinity,
+                                  height: 56.h,
+                                  decoration: BoxDecoration(
+                                    gradient: const LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Color(0xFF5CBF60),
+                                        Color(0xFF4CAF50),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: () => Get.toNamed('/paywall'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      elevation: 0,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Upgrade to Pro',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -86,7 +132,7 @@ class FeedScreen extends StatelessWidget {
               height: 40.sp,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: primaryColor,
+                color: const Color(0xFF4CAF50),
               ),
               child: Icon(
                 Iconsax.add,
@@ -241,21 +287,85 @@ class FeedScreen extends StatelessWidget {
   }
 
   Widget _buildWelcomeItem(BuildContext context) {
-    return Card(
+    return Container(
       margin: EdgeInsets.only(bottom: 12.sp),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: primaryColor,
-          child: Icon(Iconsax.user, color: Colors.white),
-        ),
-        title: Text(
-          'welcomeFeed'.tr,
-          style: context.font14.copyWith(fontWeight: FontWeight.w600),
-        ),
-        subtitle: Text(
-          'coach_message'.tr,
-          style: context.font12,
-        ),
+      padding: EdgeInsets.all(16.sp),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 24.r,
+                backgroundColor: Colors.grey[700],
+                child: Icon(Iconsax.user, color: Colors.white, size: 24.sp),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Luke Benoit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Container(
+                          width: 16.w,
+                          height: 16.w,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      '03 Dec',
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            'Hey, welcome to Rypstick! Take advantage of your free swing lesson by uploading a short (2-3 seconds) video of your swing both down the line and face on with your 7 iron or driver. Dr. Luke Benoit will provide timely feedback of your swing.',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15.sp,
+              height: 1.5,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'Additionally, you can use this feed to catch us up on your progress and continue to receive feedback from our coaches! We\'re looking forward to help your game!',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15.sp,
+              height: 1.5,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -267,4 +377,3 @@ class FeedScreen extends StatelessWidget {
     );
   }
 }
-

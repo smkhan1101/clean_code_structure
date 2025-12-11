@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/auth_controller.dart';
 
@@ -36,57 +37,94 @@ class NotificationPermissionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.all(25.sp),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 25.sp),
-                    Text(
-                      'allow_notifications'.tr,
-                      style: context.font26.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.surface,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 50.h),
+                      Text(
+                        'allow_notifications'.tr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32.sp,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 25.sp),
-                    Text(
-                      'notifications_desc'.tr,
-                      style: context.font15.copyWith(
-                        color: Theme.of(context).colorScheme.surface,
+                      SizedBox(height: 16.h),
+                      Text(
+                        'notifications_desc'.tr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          height: 1.5,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(25.sp),
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: Column(
                 children: [
-                  PrimaryButton(
-                    text: 'allow'.tr,
-                    onPressed: _requestNotificationPermission,
-                  ),
-                  SizedBox(height: 6.sp),
-                  GestureDetector(
-                    onTap: _onSkip,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 17.sp),
-                      child: Text(
-                        'skip'.tr,
-                        style: context.font18.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF5CBF60),
+                          Color(0xFF4CAF50),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _requestNotificationPermission,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        elevation: 0,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        minimumSize: Size(double.infinity, 56.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
-                        textAlign: TextAlign.center,
+                      ),
+                      child: Text(
+                        'allow'.tr,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(height: 20.h),
+                  Center(
+                    child: GestureDetector(
+                      onTap: _onSkip,
+                      child: Text(
+                        'skip'.tr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40.h),
                 ],
               ),
             ),
@@ -96,4 +134,3 @@ class NotificationPermissionScreen extends StatelessWidget {
     );
   }
 }
-

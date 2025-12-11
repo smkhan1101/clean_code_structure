@@ -1,301 +1,386 @@
-import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:startup_repo/core/helper/navigation.dart';
+import 'package:startup_repo/features/auth/presentation/controller/signup_details_controller.dart';
 import 'package:startup_repo/imports.dart';
-import '../controller/auth_controller.dart';
 
-class SignupDetailsScreen extends StatefulWidget {
+class SignupDetailsScreen extends StatelessWidget {
   const SignupDetailsScreen({super.key});
 
   @override
-  State<SignupDetailsScreen> createState() => _SignupDetailsScreenState();
-}
-
-class _SignupDetailsScreenState extends State<SignupDetailsScreen> {
-  final controller = Get.find<AuthController>();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  DateTime? selectedDate;
-  String selectedGender = 'None';
-  String selectedHandType = 'Right-handed';
-  String selectedHandicap = '10';
-  String selectedShaftLength = 'None';
-  String selectedPreferredUnit = 'Yards, MPH';
-  bool isTrainedBefore = false;
-
-  final List<String> genderList = ['None', 'Male', 'Female', 'Other', 'Prefer not to answer'];
-  final List<String> handList = ['Left-handed', 'Right-handed'];
-  final List<String> handicapList = [
-    '+10', '+9', '+8', '+7', '+6', '+5', '+4', '+3', '+2', '+1', '0',
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
-    '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
-    '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', 'Beginner'
-  ];
-  final List<String> shaftLengthList = ['None', 'White 45"', 'Blue 44"', 'Green 41"', 'Orange 38"'];
-  final List<String> measuredUnits = ['Yards, MPH', 'Meters, KM/H', 'Yards, M/S', 'Meters, MPH'];
-  final List<String> valueUnits = ['Yards/MPH', 'Meters/KPH', 'Yards/MPS', 'Meters/MPH'];
-
-  @override
-  void initState() {
-    super.initState();
-    selectedDate = DateTime.now();
-  }
-
-  @override
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
-
-  bool _isFormValid() {
-    return firstNameController.text.isNotEmpty &&
-        lastNameController.text.isNotEmpty &&
-        selectedGender.toLowerCase() != 'none' &&
-        selectedHandType.isNotEmpty &&
-        selectedHandicap.isNotEmpty &&
-        selectedShaftLength.toLowerCase() != 'none' &&
-        selectedPreferredUnit.isNotEmpty;
-  }
-
-  void _onConfirm() {
-    if (!_isFormValid()) return;
-
-    final preferredUnitValue = valueUnits[measuredUnits.indexOf(selectedPreferredUnit)];
-    
-    controller.setSignupDetails(
-      firstName: firstNameController.text,
-      lastName: lastNameController.text,
-      dateOfBirth: selectedDate!,
-      gender: selectedGender,
-      handType: selectedHandType,
-      handicap: selectedHandicap,
-      shaftLength: selectedShaftLength,
-      preferredUnit: preferredUnitValue,
-      isTrainedBefore: isTrainedBefore,
-    );
-
-    if (isTrainedBefore) {
-      Get.toNamed('/trained-before');
-    } else {
-      Get.toNamed('/notification-permission');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SignupDetailsController());
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(25.sp),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Iconsax.arrow_left,
-                      color: Theme.of(context).colorScheme.surface,
-                      size: 25.sp,
-                    ),
-                    onPressed: () => Get.back(),
-                    alignment: Alignment.centerLeft,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24.sp),
+                    onPressed: () {
+                      pop();
+                    },
                     padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
                   ),
-                  SizedBox(height: 15.sp),
-                  Text(
-                    'tell_us_about'.tr,
-                    style: context.font26.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.surface,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tell us more about yourself.',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10.sp),
-                  Text(
-                    'this_will_help'.tr,
-                    style: context.font15.copyWith(
-                      color: Theme.of(context).colorScheme.surface,
+                    SizedBox(height: 16.h),
+                    Text(
+                      'This will help us generate a training program that is just right for you. All of your data is stored securely, and we never share it.',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        height: 1.5,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 30.sp),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomTextField(
-                          controller: firstNameController,
-                          hintText: 'first_name'.tr,
-                          onChanged: (_) => setState(() {}),
+                    SizedBox(height: 40.h),
+                    _buildFormField(
+                      label: 'First name',
+                      child: TextField(
+                        controller: controller.firstNameController,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                        decoration: InputDecoration(
+                          hintText: 'First name',
+                          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16.sp),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          filled: false,
                         ),
                       ),
-                      SizedBox(width: 16.sp),
-                      Expanded(
-                        child: CustomTextField(
-                          controller: lastNameController,
-                          hintText: 'last_name'.tr,
-                          onChanged: (_) => setState(() {}),
+                    ),
+                    SizedBox(height: 24.h),
+                    _buildFormField(
+                      label: 'Last name',
+                      child: TextField(
+                        controller: controller.lastNameController,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                        decoration: InputDecoration(
+                          hintText: 'Last name',
+                          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16.sp),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          filled: false,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 16.sp),
-                  GestureDetector(
-                    onTap: _selectDate,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 16.sp, horizontal: 12.sp),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Theme.of(context).dividerColor,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'dob'.tr,
-                            style: context.font15.copyWith(
-                              color: Theme.of(context).colorScheme.surface,
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 8.sp),
+                    ),
+                    SizedBox(height: 24.h),
+                    _buildFormField(
+                      label: 'Date of birth',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.selectDate(context),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              borderRadius: BorderRadius.circular(8.sp),
+                              color: Colors.grey[800],
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Text(
-                              DateFormat('MMM dd, yyyy').format(selectedDate!),
-                              style: context.font14.copyWith(
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
+                              controller.selectedDate.value != null
+                                  ? controller.formatDate(controller.selectedDate.value!)
+                                  : '9 December 2025',
+                              style: TextStyle(color: Colors.white, fontSize: 16.sp),
                             ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    _buildFormField(
+                      label: 'Gender',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.showDropdownMenu(
+                            context: context,
+                            title: 'Gender',
+                            options: ['None', 'Male', 'Female', 'Other'],
+                            onSelected: controller.handleGenderSelected,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.selectedGender.value.isEmpty
+                                    ? 'None'
+                                    : controller.selectedGender.value,
+                                style: TextStyle(
+                                  color: controller.selectedGender.value.isEmpty
+                                      ? Colors.grey[400]
+                                      : Colors.white,
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 16.sp),
+                                  SizedBox(height: 2.h),
+                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16.sp),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(color: Colors.grey[700], height: 32.h),
+                    _buildFormField(
+                      label: 'I\'m...',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.showDropdownMenu(
+                            context: context,
+                            title: 'I\'m...',
+                            options: ['Right-handed', 'Left-handed'],
+                            onSelected: controller.handleHandednessSelected,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.selectedHandedness.value,
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                              ),
+                              SizedBox(width: 8.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 16.sp),
+                                  SizedBox(height: 2.h),
+                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16.sp),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(color: Colors.grey[700], height: 32.h),
+                    _buildFormField(
+                      label: 'Handicap',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.showDropdownMenu(
+                            context: context,
+                            title: 'Handicap',
+                            options: List.generate(36, (i) => (i).toString()),
+                            onSelected: controller.handleHandicapSelected,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.selectedHandicap.value,
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                              ),
+                              SizedBox(width: 8.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 16.sp),
+                                  SizedBox(height: 2.h),
+                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16.sp),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(color: Colors.grey[700], height: 32.h),
+                    _buildFormField(
+                      label: 'Shaft length',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.showDropdownMenu(
+                            context: context,
+                            title: 'Shaft length',
+                            options: ['None', 'Standard', 'Long', 'Short'],
+                            onSelected: controller.handleShaftLengthSelected,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.selectedShaftLength.value.isEmpty
+                                    ? 'None'
+                                    : controller.selectedShaftLength.value,
+                                style: TextStyle(
+                                  color: controller.selectedShaftLength.value.isEmpty
+                                      ? Colors.grey[400]
+                                      : Colors.white,
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 16.sp),
+                                  SizedBox(height: 2.h),
+                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16.sp),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(color: Colors.grey[700], height: 32.h),
+                    _buildFormField(
+                      label: 'Preferred units',
+                      child: Obx(
+                        () => GestureDetector(
+                          onTap: () => controller.showDropdownMenu(
+                            context: context,
+                            title: 'Preferred units',
+                            options: ['Yards, MPH', 'Meters, KPH'],
+                            onSelected: controller.handlePreferredUnitsSelected,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                controller.selectedPreferredUnits.value,
+                                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                              ),
+                              SizedBox(width: 8.w),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 16.sp),
+                                  SizedBox(height: 2.h),
+                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 16.sp),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    Obx(
+                      () => Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'I have trained with Rypstick before',
+                              style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                            ),
+                          ),
+                          Checkbox(
+                            value: controller.hasTrainedBefore.value,
+                            onChanged: controller.toggleHasTrainedBefore,
+                            activeColor: const Color(0xFF4CAF50),
+                            checkColor: Colors.white,
+                            side: BorderSide(color: Colors.grey[600]!),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16.sp),
-                  _buildDropdown(
-                    label: 'gender'.tr,
-                    value: selectedGender,
-                    items: genderList,
-                    onChanged: (value) => setState(() => selectedGender = value!),
-                  ),
-                  Divider(height: 1, color: Theme.of(context).colorScheme.onSecondary),
-                  SizedBox(height: 16.sp),
-                  _buildDropdown(
-                    label: 'i_m'.tr,
-                    value: selectedHandType,
-                    items: handList,
-                    onChanged: (value) => setState(() => selectedHandType = value!),
-                  ),
-                  SizedBox(height: 16.sp),
-                  _buildDropdown(
-                    label: 'handicap'.tr,
-                    value: selectedHandicap,
-                    items: handicapList,
-                    onChanged: (value) => setState(() => selectedHandicap = value!),
-                  ),
-                  SizedBox(height: 16.sp),
-                  _buildDropdown(
-                    label: 'shaft_length'.tr,
-                    value: selectedShaftLength,
-                    items: shaftLengthList,
-                    onChanged: (value) => setState(() => selectedShaftLength = value!),
-                  ),
-                  Divider(height: 1, color: Theme.of(context).colorScheme.onSecondary),
-                  SizedBox(height: 16.sp),
-                  _buildDropdown(
-                    label: 'preferred_units'.tr,
-                    value: selectedPreferredUnit,
-                    items: measuredUnits,
-                    onChanged: (value) => setState(() => selectedPreferredUnit = value!),
-                  ),
-                  SizedBox(height: 16.sp),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'i_hve_trained_before'.tr,
-                          style: context.font15.copyWith(
-                            color: Theme.of(context).colorScheme.surface,
+                    SizedBox(height: 40.h),
+                    Obx(
+                      () => AbsorbPointer(
+                        absorbing: !controller.isFormValid.value,
+                        child: Opacity(
+                          opacity: controller.isFormValid.value ? 1.0 : 0.5,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xFF5CBF60),
+                                  Color(0xFF4CAF50),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: controller.handleConfirm,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                elevation: 0,
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(vertical: 16.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                              ),
+                              child: Text(
+                                'Confirm',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                      Checkbox(
-                        value: isTrainedBefore,
-                        onChanged: (value) => setState(() => isTrainedBefore = value ?? false),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(height: 40.h),
+                  ],
+                ),
               ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: EdgeInsets.all(25.sp),
-              child: PrimaryButton(
-                text: isTrainedBefore ? 'continue_title'.tr : 'confirm'.tr,
-                onPressed: _isFormValid() ? _onConfirm : null,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildDropdown({
+  Widget _buildFormField({
     required String label,
-    required String value,
-    required List<String> items,
-    required Function(String?) onChanged,
+    required Widget child,
   }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: context.font15.copyWith(
-            color: Theme.of(context).colorScheme.surface,
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(color: Colors.white, fontSize: 16.sp),
           ),
         ),
-        DropdownButton<String>(
-          value: value,
-          underline: const SizedBox(),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(
-                item,
-                style: context.font14.copyWith(
-                  color: item.toLowerCase() == 'none'
-                      ? Theme.of(context).colorScheme.onSecondary
-                      : Theme.of(context).colorScheme.surface,
-                ),
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: child,
+          ),
         ),
       ],
     );
   }
 }
-

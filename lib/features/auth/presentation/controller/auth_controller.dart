@@ -215,6 +215,14 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
+  void clearError() {
+    _showError = false;
+    _errorMessage = '';
+    _errorTitle = '';
+    _isSuccess = false;
+    update();
+  }
+
   Future<bool> checkAccount() async {
     return await authService.checkAccount();
   }

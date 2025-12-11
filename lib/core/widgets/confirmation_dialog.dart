@@ -30,31 +30,91 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
+      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+      ),
       child: Padding(
-        padding: AppPadding.padding16,
+        padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              title.tr,
-              style: context.font16.copyWith(fontWeight: FontWeight.w700),
+              title,
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
             ),
-            Divider(height: 24.sp),
-            Text(subtitle.tr, textAlign: TextAlign.center, style: context.font14),
-            SizedBox(height: 24.sp),
+            SizedBox(height: 16.h),
+            Divider(
+              height: 1,
+              color: isDark ? Colors.grey[700] : Colors.grey[300],
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark ? Colors.grey[300] : Colors.grey[700],
+              ),
+            ),
+            SizedBox(height: 24.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                if (actionText.toLowerCase() != 'ok')
+                  Expanded(
+                    child: PrimaryOutlineButton(
+                      text: 'cancel'.tr,
+                      onPressed: pop,
+                      textColor: context.textTheme.bodyLarge!.color,
+                    ),
+                  ),
+                if (actionText.toLowerCase() != 'ok') SizedBox(width: 16.w),
                 Expanded(
-                  child: PrimaryOutlineButton(
-                    text: 'cancel'.tr,
-                    onPressed: pop,
-                    textColor: context.textTheme.bodyLarge!.color,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF5CBF60),
+                          Color(0xFF4CAF50),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        onAccept();
+                        pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        elevation: 0,
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        minimumSize: Size(double.infinity, 50.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        actionText,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(width: 16.sp),
-                Expanded(child: PrimaryButton(text: actionText, onPressed: onAccept)),
               ],
             ),
           ],

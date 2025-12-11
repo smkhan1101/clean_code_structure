@@ -1,25 +1,25 @@
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:startup_repo/features/auth/presentation/controller/get_started_controller.dart';
 import 'package:startup_repo/imports.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
 
-  Future<void> _openUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(GetStartedController());
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          Positioned.fill(
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: MediaQuery.of(context).size.height * 0.30,
             child: Image.asset(
-              Images.splashImg,
-              fit: BoxFit.fitWidth,
+              'assets/images/login.jpeg',
+              fit: BoxFit.cover,
             ),
           ),
           Positioned(
@@ -27,84 +27,124 @@ class GetStartedScreen extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.sp),
-                  topRight: Radius.circular(20.sp),
-                ),
+              decoration: const BoxDecoration(
+                color: Colors.black,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(25.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: 18.sp),
-                    Text(
-                      'splash_heading'.tr,
-                      style: context.font26.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.surface,
-                        height: 1.3,
-                      ),
-                    ),
-                    SizedBox(height: 30.sp),
-                    PrimaryButton(
-                      text: 'get_started'.tr,
-                      onPressed: () {
-                        Get.toNamed('/signup-details');
-                      },
-                    ),
-                    SizedBox(height: 15.sp),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed('/login');
-                      },
-                      child: Text(
-                        'already_account'.tr,
-                        style: context.font12.copyWith(
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                          color: Colors.white.withOpacity(0.7),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 40.sp),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => _openUrl('https://rypstick.com/pages/privacy-policy'),
-                          child: Text(
-                            'privacy_policy'.tr,
-                            style: context.font10.copyWith(
-                              color: Colors.white.withOpacity(0.7),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.w),
+                        child: Transform.translate(
+                          offset: Offset(0, -20.h),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 0.h, bottom: 0.h),
+                            child: Text(
+                              'Get your swing up to speed with Rypstick.',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30.sp,
+                                fontWeight: FontWeight.bold,
+                                height: 1.2,
+                              ),
+                              textAlign: TextAlign.left,
                             ),
                           ),
                         ),
-                        Container(
-                          width: 2.sp,
-                          height: 2.sp,
-                          margin: EdgeInsets.symmetric(horizontal: 4.sp),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            shape: BoxShape.circle,
-                          ),
+                      ),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25.w),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color(0xFF5CBF60),
+                                    Color(0xFF4CAF50),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(14.r),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: controller.handleGetStarted,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  foregroundColor: Colors.white,
+                                  padding: EdgeInsets.symmetric(vertical: 18.h),
+                                  minimumSize: Size(double.infinity, 56.h),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Get started',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            TextButton(
+                              onPressed: controller.handleAlreadyHaveAccount,
+                              child: Text(
+                                'I already have an account',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.7),
+                                  fontSize: 14.sp,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        GestureDetector(
-                          onTap: () => _openUrl('https://rypstick.com/pages/terms-of-service'),
-                          child: Text(
-                            'terms_of_service'.tr,
-                            style: context.font10.copyWith(
-                              color: Colors.white.withOpacity(0.7),
+                      ),
+                      SizedBox(height: 34.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: controller.handlePrivacyPolicy,
+                            child: Text(
+                              'Privacy policy',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 12.sp,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Text(
+                            ' • ',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: controller.handleTermsOfService,
+                            child: Text(
+                              'Terms of service',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -114,4 +154,3 @@ class GetStartedScreen extends StatelessWidget {
     );
   }
 }
-

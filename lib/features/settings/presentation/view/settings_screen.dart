@@ -17,49 +17,75 @@ class SettingsScreen extends StatelessWidget {
         }
 
         return Scaffold(
-          appBar: AppBar(title: Text('preferences'.tr)),
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            title: Text(
+              'Preferences'.tr,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           bottomNavigationBar: _buildBottomNavBar(context, 4),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(25.sp),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(12.sp),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          controller.email,
-                          style: context.font15.copyWith(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        controller.email,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.sp,
                         ),
-                        if (!controller.isProPlan) ...[
-                          Divider(height: 24.sp),
-                          GestureDetector(
-                            onTap: () => Get.toNamed('/paywall'),
-                            child: Text(
-                              'upgrade_settings_button'.tr,
-                              style: context.font15.copyWith(color: primaryColor),
+                      ),
+                      if (!controller.isProPlan) ...[
+                        SizedBox(height: 16.h),
+                        Divider(
+                          color: Colors.grey[700],
+                          height: 1,
+                        ),
+                        SizedBox(height: 16.h),
+                        GestureDetector(
+                          onTap: () => Get.toNamed('/paywall'),
+                          child: Text(
+                            'Upgrade to the Pro Plan'.tr,
+                            style: TextStyle(
+                              color: const Color(0xFF20CD26),
+                              fontSize: 15.sp,
                             ),
                           ),
-                        ],
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 25.sp),
                 Text(
                   'permissions'.tr.toUpperCase(),
-                  style: context.font12.copyWith(
-                    color: Get.theme.colorScheme.onSecondary,
+                  style: TextStyle(
+                    color: Colors.grey.withOpacity(0.8),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 8.sp),
                 _buildSettingsCard([
-                  _buildSettingItem(
+                  _buildTappableSettingItem(
                     'notifications'.tr,
                     controller.notifications,
                     ['Allow', 'Don\'t Allow'],
@@ -69,34 +95,36 @@ class SettingsScreen extends StatelessWidget {
                 SizedBox(height: 25.sp),
                 Text(
                   'training'.tr.toUpperCase(),
-                  style: context.font12.copyWith(
-                    color: Get.theme.colorScheme.onSecondary,
+                  style: TextStyle(
+                    color: Colors.grey.withOpacity(0.8),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 8.sp),
                 _buildSettingsCard([
-                  _buildSettingItem(
+                  _buildTappableSettingItem(
                     'shaft_length'.tr,
                     controller.shaft,
                     ['None', 'White 45"', 'Blue 44"', 'Green 41"', 'Orange 38"'],
                     (value) => controller.updateSetting('shaft', value),
                   ),
-                  Divider(),
-                  _buildSettingItem(
+                  Divider(color: Colors.grey[800], height: 1),
+                  _buildTappableSettingItem(
                     'radar'.tr,
                     controller.radar,
                     ['RypRadar', 'Other speed radar', 'No radar'],
                     (value) => controller.updateSetting('radar', value),
                   ),
-                  Divider(),
-                  _buildSettingItem(
+                  Divider(color: Colors.grey[800], height: 1),
+                  _buildTappableSettingItem(
                     'units'.tr,
                     controller.unit,
                     ['Yards/MPH', 'Meters/KPH', 'Yards/MPS', 'Meters/MPH'],
                     (value) => controller.updateSetting('unit', value),
                   ),
                   if (controller.isNotDay1) ...[
-                    Divider(),
+                    Divider(color: Colors.grey[800], height: 1),
                     GestureDetector(
                       onTap: () {
                         showConfirmationDialog(
@@ -106,11 +134,14 @@ class SettingsScreen extends StatelessWidget {
                           onAccept: () => controller.resetToLevel1Day1(),
                         );
                       },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.sp),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                         child: Text(
                           'reset_to_level'.tr,
-                          style: context.font15.copyWith(color: primaryColor),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                          ),
                         ),
                       ),
                     ),
@@ -119,30 +150,45 @@ class SettingsScreen extends StatelessWidget {
                 SizedBox(height: 25.sp),
                 Text(
                   'help'.tr.toUpperCase(),
-                  style: context.font12.copyWith(
-                    color: Get.theme.colorScheme.onSecondary,
+                  style: TextStyle(
+                    color: Colors.grey.withOpacity(0.8),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 8.sp),
                 _buildSettingsCard([
                   GestureDetector(
                     onTap: controller.rateApp,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.sp),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        'rate_this_app'.tr,
-                        style: context.font15.copyWith(color: primaryColor),
+                        'Rate this app'.tr,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: const Color(0xFF20CD26),
+                          fontSize: 16.sp,
+                        ),
                       ),
                     ),
                   ),
-                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Divider(color: Colors.grey[700], height: 1),
+                  ),
                   GestureDetector(
                     onTap: controller.contactUs,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.sp),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        'contact_us'.tr,
-                        style: context.font15.copyWith(color: primaryColor),
+                        'Contact us'.tr,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: const Color(0xFF20CD26),
+                          fontSize: 16.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -150,8 +196,10 @@ class SettingsScreen extends StatelessWidget {
                 SizedBox(height: 25.sp),
                 Text(
                   'account'.tr.toUpperCase(),
-                  style: context.font12.copyWith(
-                    color: Get.theme.colorScheme.onSecondary,
+                  style: TextStyle(
+                    color: Colors.grey.withOpacity(0.8),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 SizedBox(height: 8.sp),
@@ -165,15 +213,23 @@ class SettingsScreen extends StatelessWidget {
                         onAccept: () => controller.signOut(),
                       );
                     },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.sp),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        'sign_out'.tr,
-                        style: context.font15.copyWith(color: primaryColor),
+                        'Sign out'.tr,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: const Color(0xFF20CD26),
+                          fontSize: 16.sp,
+                        ),
                       ),
                     ),
                   ),
-                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Divider(color: Colors.grey[700], height: 1),
+                  ),
                   GestureDetector(
                     onTap: () {
                       final passwordController = TextEditingController();
@@ -202,11 +258,16 @@ class SettingsScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.sp),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                      alignment: Alignment.centerLeft,
                       child: Text(
-                        'delete_account'.tr,
-                        style: context.font15.copyWith(color: Colors.red),
+                        'Delete account'.tr,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: const Color(0xFFEE1606),
+                          fontSize: 16.sp,
+                        ),
                       ),
                     ),
                   ),
@@ -220,29 +281,94 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildSettingsCard(List<Widget> children) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.sp),
-        child: Column(children: children),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(12.r),
       ),
+      child: Column(children: children),
     );
   }
 
-  Widget _buildSettingItem(String title, String value, List<String> options, Function(String) onChanged) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 12.sp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: Get.context!.font15),
-          DropdownButton<String>(
-            value: value,
-            items: options.map((option) => DropdownMenuItem(value: option, child: Text(option))).toList(),
-            onChanged: (newValue) {
-              if (newValue != null) onChanged(newValue);
-            },
+  Widget _buildTappableSettingItem(
+    String title,
+    String value,
+    List<String> options,
+    Function(String) onChanged,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: Get.context!,
+          backgroundColor: Colors.grey[900],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           ),
-        ],
+          builder: (context) => Container(
+            padding: EdgeInsets.symmetric(vertical: 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                ...options.map((option) => ListTile(
+                      title: Text(
+                        option,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+                      onTap: () {
+                        onChanged(option);
+                        Get.back();
+                      },
+                      selected: option == value,
+                      selectedTileColor: Colors.grey[800],
+                    )),
+              ],
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.sp,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 16.sp,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey[400],
+                  size: 20.sp,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -254,4 +380,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-

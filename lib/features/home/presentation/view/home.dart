@@ -1,8 +1,7 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/home_controller.dart';
 import '../../data/model/home_menu.dart';
-import '../../../../core/widgets/loading.dart';
-import '../../../../core/design/app_padding.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,35 +13,21 @@ class HomeScreen extends StatelessWidget {
       init: Get.find<HomeController>(),
       builder: (controller) {
         return Scaffold(
+          backgroundColor: Colors.black,
           bottomNavigationBar: _buildBottomNavBar(context),
           body: SafeArea(
-            child: Column(
-              children: [
-                SizedBox(height: 25.sp),
-                Row(
-                  children: [
-                    Spacer(),
-                    Image.asset(
-                      Images.logo,
-                      height: 60.sp,
-                      fit: BoxFit.contain,
-                    ),
-                    Spacer(),
-                  ],
-                ),
-                SizedBox(height: 15.sp),
-                _buildCalendarView(controller, context),
-                SizedBox(height: 6.sp),
-                Divider(
-                  height: 0.5.sp,
-                  color: Get.theme.colorScheme.onSecondary,
-                  indent: 15.sp,
-                  endIndent: 15.sp,
-                ),
-                Expanded(
-                  child: _buildMenuList(controller, context),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 20.h),
+                  _buildLogo(),
+                  SizedBox(height: 24.h),
+                  _buildVideoPlayer(controller, context),
+                  SizedBox(height: 24.h),
+                  _buildMenuList(controller, context),
+                  SizedBox(height: 20.h),
+                ],
+              ),
             ),
           ),
         );
@@ -50,133 +35,163 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCalendarView(HomeController controller, BuildContext context) {
-    if (controller.isCalendarDataLoading) {
-      return Container(
-        margin: EdgeInsets.all(15.sp),
-        padding: EdgeInsets.all(10.sp),
-        decoration: BoxDecoration(
-          color: Get.theme.cardColor,
-          borderRadius: BorderRadius.circular(15.sp),
-        ),
-        height: 90.sp,
-        child: Center(
-          child: Loading(size: 30),
-        ),
-      );
-    }
-
-    if (controller.calendarData.isEmpty) {
-      return Container(
-        margin: EdgeInsets.all(15.sp),
-        padding: EdgeInsets.all(10.sp),
-        decoration: BoxDecoration(
-          color: Get.theme.cardColor,
-          borderRadius: BorderRadius.circular(15.sp),
-        ),
-        height: 90.sp,
-        child: Center(
-          child: Text(
-            'intro_video_placeholder'.tr,
-            style: context.font14,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      margin: EdgeInsets.all(15.sp),
-      padding: EdgeInsets.all(10.sp),
-      decoration: BoxDecoration(
-        color: Get.theme.cardColor,
-        borderRadius: BorderRadius.circular(15.sp),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: controller.calendarData.take(4).map((item) {
-          return Expanded(
-            child: _buildCalendarItem(item, context),
-          );
-        }).toList(),
+  Widget _buildLogo() {
+    return Center(
+      child: Image.asset(
+        Images.logo,
+        height: 50.h,
+        fit: BoxFit.contain,
       ),
     );
   }
 
-  Widget _buildCalendarItem(item, BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          item.text,
-          style: context.font10.copyWith(
-            color: Get.theme.colorScheme.onSecondary,
+  Widget _buildVideoPlayer(HomeController controller, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        children: [
+          Container(
+            height: 200.h,
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 16.w,
+                  top: 16.h,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40.w,
+                        height: 40.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[700],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.error_outline,
+                          color: Colors.white,
+                          size: 24.sp,
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Video unavailable',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            'This video is unavailable',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 14.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 16.h,
+                  right: 16.w,
+                  child: Icon(
+                    Icons.play_circle_outline,
+                    color: Colors.white,
+                    size: 32.sp,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 4.sp),
-        Text(
-          item.value,
-          style: context.font14.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Get.theme.colorScheme.surface,
-          ),
-        ),
-        if (item.progress > 0 && item.progress < 1) ...[
-          SizedBox(height: 4.sp),
-          LinearProgressIndicator(
-            value: item.progress,
-            backgroundColor: Get.theme.colorScheme.onSecondary.withOpacity(0.2),
-            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-            minHeight: 2.sp,
+          SizedBox(height: 16.h),
+          Container(
+            height: 1,
+            color: Colors.grey[800],
           ),
         ],
-      ],
+      ),
     );
   }
 
   Widget _buildMenuList(HomeController controller, BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 15.sp),
-      itemCount: controller.homeMenuList.length,
-      itemBuilder: (context, index) {
-        final menu = controller.homeMenuList[index];
-        return _buildMenuItem(menu, index, controller, context);
-      },
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        children: List.generate(controller.homeMenuList.length, (index) {
+          final menu = controller.homeMenuList[index];
+          return _buildMenuItem(menu, index, controller, context);
+        }),
+      ),
     );
   }
 
   Widget _buildMenuItem(HomeMenu menu, int index, HomeController controller, BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(bottom: 8.sp),
-      color: menu.selected ? primaryColor.withOpacity(0.1) : Get.theme.cardColor,
-      child: ListTile(
-        enabled: menu.enabled,
-        leading: Icon(
-          menu.icon,
-          color: menu.enabled ? menu.iconColor : Get.theme.colorScheme.onSecondary.withOpacity(0.5),
-        ),
-        title: Text(
-          menu.title,
-          style: context.font16.copyWith(
-            fontWeight: FontWeight.w600,
-            color: menu.enabled ? Get.theme.colorScheme.surface : Get.theme.colorScheme.onSecondary.withOpacity(0.5),
+    final isFirstItem = index == 0;
+    final isUpgradeItem =
+        menu.title.toLowerCase().contains('upgrade') || menu.title.toLowerCase().contains('pro plan');
+    final cardColor = (isFirstItem || isUpgradeItem) ? const Color(0xFF4CAF50) : Colors.grey[900];
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: menu.enabled ? () => controller.onMenuTap(index) : null,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        menu.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (menu.description.isNotEmpty) ...[
+                        SizedBox(height: 4.h),
+                        Text(
+                          menu.description,
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.8),
+                            fontSize: 16.sp,
+                            letterSpacing: 0.0,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                if (menu.enabled)
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 18.sp,
+                  ),
+              ],
+            ),
           ),
         ),
-        subtitle: menu.description.isNotEmpty
-            ? Text(
-                menu.description,
-                style: context.font12.copyWith(
-                  color: menu.enabled ? Get.theme.colorScheme.onSecondary : Get.theme.colorScheme.onSecondary.withOpacity(0.5),
-                ),
-              )
-            : null,
-        trailing: menu.enabled
-            ? Icon(
-                Iconsax.arrow_right_3,
-                color: Get.theme.colorScheme.surface,
-              )
-            : null,
-        onTap: menu.enabled ? () => controller.onMenuTap(index) : null,
       ),
     );
   }

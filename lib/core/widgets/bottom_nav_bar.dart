@@ -12,32 +12,55 @@ class AppBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Iconsax.home),
-          label: 'home'.tr,
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.black,
+      ),
+      child: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: onTap,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.black,
+        selectedItemColor: const Color(0xFF4CAF50),
+        unselectedItemColor: Colors.grey,
+        selectedLabelStyle: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w500,
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Iconsax.document),
-          label: 'feed'.tr,
+        unselectedLabelStyle: TextStyle(
+          fontSize: 12.sp,
+          fontWeight: FontWeight.w400,
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Iconsax.chart),
-          label: 'progress'.tr,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Iconsax.award),
-          label: 'rewards'.tr,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Iconsax.user),
-          label: 'account'.tr,
-        ),
-      ],
+        iconSize: 24.sp,
+        elevation: 0,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.home),
+            activeIcon: Icon(Iconsax.home),
+            label: 'home'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.document),
+            activeIcon: Icon(Iconsax.document),
+            label: 'feed'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.chart),
+            activeIcon: Icon(Iconsax.chart),
+            label: 'progress'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.award),
+            activeIcon: Icon(Iconsax.award),
+            label: 'rewards'.tr,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Iconsax.user),
+            activeIcon: Icon(Iconsax.user),
+            label: 'account'.tr,
+          ),
+        ],
+      ),
     );
   }
 
@@ -61,4 +84,3 @@ class AppBottomNavBar extends StatelessWidget {
     }
   }
 }
-

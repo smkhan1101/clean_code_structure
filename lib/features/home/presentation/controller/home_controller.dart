@@ -4,6 +4,9 @@ import '../../../../imports.dart';
 import '../../data/model/calendar_item.dart';
 import '../../data/model/home_menu.dart';
 import '../../domain/service/home_service.dart';
+import '../../../tutorials/presentation/view/tutorials_screen.dart';
+import '../../../training/presentation/view/training_screen.dart';
+import '../view/contact_us_screen.dart';
 
 class HomeController extends GetxController implements GetxService {
   final HomeService homeService;
@@ -111,24 +114,24 @@ class HomeController extends GetxController implements GetxService {
       ));
     } else {
       menuItems.add(HomeMenu(
-        title: 'measure_baseline'.tr,
-        description: 'measure_baseline_desc'.tr,
+        title: 'Measure your baseline'.tr,
+        description: 'Let\'s calculate your swing speed!'.tr,
         icon: Iconsax.arrow_right_3,
         iconColor: Get.theme.colorScheme.surface,
       ));
     }
 
     menuItems.add(HomeMenu(
-      title: 'watch_tutorial'.tr,
-      description: 'watch_tutorial_description'.tr,
+      title: 'Watch tutorials'.tr,
+      description: 'Procols & swing fix videos'.tr,
       icon: Iconsax.arrow_right_3,
       iconColor: Get.theme.colorScheme.surface,
     ));
 
     if (!_isProPlan) {
       menuItems.add(HomeMenu(
-        title: 'upgrade_to_pro_menu'.tr,
-        description: 'upgrade_to_pro_menu_description'.tr,
+        title: 'Upgrade to  the Pro Plan'.tr,
+        description: 'You\'re eligible for a 50% OFF'.tr,
         icon: Iconsax.arrow_right_3,
         iconColor: Get.theme.colorScheme.surface,
       ));
@@ -142,15 +145,15 @@ class HomeController extends GetxController implements GetxService {
     }
 
     menuItems.add(HomeMenu(
-      title: 'shop'.tr,
-      description: 'visit_our_store'.tr,
+      title: 'Shop'.tr,
+      description: 'Visit our online store'.tr,
       icon: Iconsax.arrow_right_3,
       iconColor: Get.theme.colorScheme.surface,
     ));
 
     menuItems.add(HomeMenu(
-      title: 'contact_us'.tr,
-      description: 'contact_us_description'.tr,
+      title: 'Contact us'.tr,
+      description: 'How can we help?'.tr,
       icon: Iconsax.arrow_right_3,
       iconColor: Get.theme.colorScheme.surface,
     ));
@@ -163,16 +166,10 @@ class HomeController extends GetxController implements GetxService {
 
     switch (index) {
       case 0:
-        if (_isTrainingEnabled) {
-          Get.toNamed('/measure-baseline?type=training');
-        } else if (_baselineExists) {
-          Get.toNamed('/measure-baseline?type=training');
-        } else {
-          Get.toNamed('/measure-baseline?type=base');
-        }
+        TrainingScreen.show();
         break;
       case 1:
-        Get.toNamed('/tutorials');
+        TutorialsScreen.show();
         break;
       case 2:
         if (!_isProPlan) {
@@ -204,16 +201,10 @@ class HomeController extends GetxController implements GetxService {
   }
 
   void _openContactUs() {
-    try {
-      final uri = Uri.parse('mailto:rypstickstaff@gmail.com');
-      launchUrl(uri, mode: LaunchMode.externalApplication);
-    } catch (e) {
-      showToast('error_opening_email'.tr);
-    }
+    ContactUsScreen.show();
   }
 
   void refreshData() {
     loadHomeData();
   }
 }
-
