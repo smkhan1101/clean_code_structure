@@ -82,10 +82,14 @@ class SignupDetailsController extends GetxController {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.grey[900],
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) => Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
+        ),
         padding: EdgeInsets.symmetric(vertical: 20.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -99,16 +103,32 @@ class SignupDetailsController extends GetxController {
               ),
             ),
             SizedBox(height: 20.h),
-            ...options.map((option) => ListTile(
-                  title: Text(
-                    option,
-                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
-                  ),
-                  onTap: () {
-                    onSelected(option);
-                    Navigator.pop(context);
-                  },
-                )),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final isHandicap = title == 'Handicap';
+                  return ListTile(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+                    title: Center(
+                      child: Text(
+                        options[index],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: isHandicap ? 20.sp : 16.sp,
+                          fontWeight: isHandicap ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      onSelected(options[index]);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

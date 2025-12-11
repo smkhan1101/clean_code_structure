@@ -60,6 +60,7 @@ class SignupDetailsScreen extends StatelessWidget {
                       child: TextField(
                         controller: controller.firstNameController,
                         textAlign: TextAlign.right,
+                        cursorColor: const Color(0xFF4CAF50),
                         style: TextStyle(color: Colors.white, fontSize: 16.sp),
                         decoration: InputDecoration(
                           hintText: 'First name',
@@ -79,6 +80,7 @@ class SignupDetailsScreen extends StatelessWidget {
                       child: TextField(
                         controller: controller.lastNameController,
                         textAlign: TextAlign.right,
+                        cursorColor: const Color(0xFF4CAF50),
                         style: TextStyle(color: Colors.white, fontSize: 16.sp),
                         decoration: InputDecoration(
                           hintText: 'Last name',
@@ -185,7 +187,7 @@ class SignupDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(color: Colors.grey[700], height: 32.h),
+                    SizedBox(height: 10.h),
                     _buildFormField(
                       label: 'Handicap',
                       child: Obx(
@@ -217,7 +219,7 @@ class SignupDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Divider(color: Colors.grey[700], height: 32.h),
+                    SizedBox(height: 10.h),
                     _buildFormField(
                       label: 'Shaft length',
                       child: Obx(

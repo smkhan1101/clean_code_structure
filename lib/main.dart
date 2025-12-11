@@ -35,7 +35,7 @@ import 'features/pro_content/presentation/view/pro_content_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
- WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   Map<String, Map<String, String>> languages = await di.init();
@@ -86,14 +86,14 @@ class MyApp extends StatelessWidget {
                   );
                 },
               ),
-                  getPages: [
-                    GetPage(name: '/get-started', page: () => const GetStartedScreen()),
-                    GetPage(name: '/login', page: () => const LoginScreen(isLogin: true)),
-                    GetPage(name: '/signup', page: () => const LoginScreen(isLogin: false)),
-                    GetPage(name: '/signup-details', page: () => const SignupDetailsScreen()),
-                    GetPage(name: '/trained-before', page: () => const TrainedBeforeScreen()),
-                    GetPage(name: '/notification-permission', page: () => const NotificationPermissionScreen()),
-                    GetPage(name: '/reset-password', page: () => const ResetPasswordScreen()),
+              getPages: [
+                GetPage(name: '/get-started', page: () => const GetStartedScreen()),
+                GetPage(name: '/login', page: () => const LoginScreen(isLogin: true)),
+                GetPage(name: '/signup', page: () => const LoginScreen(isLogin: false)),
+                GetPage(name: '/signup-details', page: () => const SignupDetailsScreen()),
+                GetPage(name: '/trained-before', page: () => const TrainedBeforeScreen()),
+                GetPage(name: '/notification-permission', page: () => const NotificationPermissionScreen()),
+                GetPage(name: '/reset-password', page: () => const ResetPasswordScreen()),
                 GetPage(name: '/home', page: () => const HomeScreen()),
                 GetPage(name: '/feed', page: () => const FeedScreen()),
                 GetPage(name: '/training', page: () => const TrainingScreen()),
