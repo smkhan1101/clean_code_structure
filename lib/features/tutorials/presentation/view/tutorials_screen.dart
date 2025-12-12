@@ -1,4 +1,5 @@
 import 'package:startup_repo/imports.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TutorialsScreen extends StatefulWidget {
   const TutorialsScreen({super.key});
@@ -8,6 +9,7 @@ class TutorialsScreen extends StatefulWidget {
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      barrierColor: Colors.grey.withOpacity(0.8),
       builder: (context) => const TutorialsScreen(),
     );
   }
@@ -21,6 +23,20 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
   int selectedLevel = 0;
   Set<int> expandedItems = {};
 
+  final Map<String, String> videoIds = {
+    'Warm-Up': 'IF0kLstvX6M',
+    'Freezers': 'IF0kLstvX6M',
+    'Lead Heel Lift': 'IF0kLstvX6M',
+    'Baseline Test: Normal Swings': 'IF0kLstvX6M',
+    'Casting': 'IF0kLstvX6M',
+    'Chicken Wing': 'IF0kLstvX6M',
+    'Early Extension': 'IF0kLstvX6M',
+    'Flat Shoulder': 'IF0kLstvX6M',
+    'Grounded': 'IF0kLstvX6M',
+    'Harpooner': 'IF0kLstvX6M',
+    'Slicer': 'IF0kLstvX6M',
+  };
+
   @override
   Widget build(BuildContext context) {
     final tutorialItems = selectedMain == 0
@@ -28,7 +44,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
         : ['Casting', 'Chicken Wing', 'Early Extension', 'Flat Shoulder', 'Grounded', 'Harpooner', 'Slicer'];
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
+      height: MediaQuery.of(context).size.height * 0.95,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
@@ -85,7 +101,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
             padding: EdgeInsets.symmetric(horizontal: 20.sp),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(8.sp),
               ),
               child: Row(
@@ -102,7 +118,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 12.sp),
                         decoration: BoxDecoration(
-                          color: selectedMain == 0 ? Colors.grey[900] : Colors.transparent,
+                          color: selectedMain == 0 ? Colors.grey[700] : Colors.transparent,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8.sp),
                             bottomLeft: Radius.circular(8.sp),
@@ -133,7 +149,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 12.sp),
                         decoration: BoxDecoration(
-                          color: selectedMain == 1 ? Colors.grey[900] : Colors.transparent,
+                          color: selectedMain == 1 ? Colors.grey[700] : Colors.transparent,
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(8.sp),
                             bottomRight: Radius.circular(8.sp),
@@ -142,7 +158,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                           ),
                         ),
                         child: Text(
-                          'Swing Fix Videos',
+                          'Swing fix videos',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -163,11 +179,12 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20.sp),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.grey[900],
                   borderRadius: BorderRadius.circular(8.sp),
                 ),
                 child: Row(
-                  children: List.generate(4, (index) {
+                  children: List.generate(8, (index) {
+                    final isSelected = selectedLevel == index;
                     return Expanded(
                       child: GestureDetector(
                         onTap: () {
@@ -176,24 +193,35 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 8.sp),
+                          padding: EdgeInsets.symmetric(vertical: 10.sp),
                           decoration: BoxDecoration(
-                            color: selectedLevel == index ? Colors.grey[900] : Colors.transparent,
-                            borderRadius: BorderRadius.only(
-                              topLeft: index == 0 ? Radius.circular(8.sp) : Radius.zero,
-                              bottomLeft: index == 0 ? Radius.circular(8.sp) : Radius.zero,
-                              topRight: index == 3 ? Radius.circular(8.sp) : Radius.zero,
-                              bottomRight: index == 3 ? Radius.circular(8.sp) : Radius.zero,
-                            ),
+                            color: isSelected ? Colors.grey[600] : Colors.transparent,
+                            borderRadius: BorderRadius.circular(6.sp),
                           ),
-                          child: Text(
-                            'Level ${index + 1}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Text(
+                                  'L${index + 1}',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              if (index < 7)
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    width: 1,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
                       ),
@@ -210,6 +238,9 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
               itemCount: tutorialItems.length,
               itemBuilder: (context, index) {
                 final isExpanded = expandedItems.contains(index);
+                final itemName = tutorialItems[index];
+                final videoId = videoIds[itemName] ?? 'IF0kLstvX6M';
+
                 return Container(
                   margin: EdgeInsets.only(bottom: 12.sp),
                   decoration: BoxDecoration(
@@ -238,7 +269,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      tutorialItems[index],
+                                      itemName,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16.sp,
@@ -269,68 +300,55 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                       ),
                       if (isExpanded) ...[
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                           child: Container(
                             height: 200.h,
                             decoration: BoxDecoration(
                               color: Colors.grey[800],
                               borderRadius: BorderRadius.circular(12.r),
                             ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 16.w,
-                                  top: 16.h,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 40.w,
-                                        height: 40.w,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: Stack(
+                                children: [
+                                  YoutubePlayer(
+                                    controller: YoutubePlayerController(
+                                      initialVideoId: videoId,
+                                      flags: const YoutubePlayerFlags(
+                                        autoPlay: false,
+                                        mute: false,
+                                      ),
+                                    ),
+                                    showVideoProgressIndicator: true,
+                                    progressIndicatorColor: const Color(0xFF4CAF50),
+                                    progressColors: const ProgressBarColors(
+                                      playedColor: Color(0xFF4CAF50),
+                                      handleColor: Color(0xFF4CAF50),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 8.h,
+                                    right: 8.w,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _openFullScreenVideo(context, videoId, itemName);
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(8.w),
                                         decoration: BoxDecoration(
-                                          color: Colors.grey[700],
+                                          color: Colors.black.withOpacity(0.7),
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
-                                          Icons.error_outline,
+                                          Icons.fullscreen,
                                           color: Colors.white,
-                                          size: 24.sp,
+                                          size: 20.sp,
                                         ),
                                       ),
-                                      SizedBox(width: 12.w),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'This video is unavailable',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 4.h),
-                                          Text(
-                                            'Error code: 152 - 15',
-                                            style: TextStyle(
-                                              color: Colors.grey[400],
-                                              fontSize: 14.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  bottom: 16.h,
-                                  right: 16.w,
-                                  child: Icon(
-                                    Icons.play_circle_outline,
-                                    color: Colors.white,
-                                    size: 32.sp,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -343,6 +361,100 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _openFullScreenVideo(BuildContext context, String videoId, String title) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => _FullScreenVideoPlayer(
+          videoId: videoId,
+          title: title,
+        ),
+      ),
+    );
+  }
+}
+
+class _FullScreenVideoPlayer extends StatefulWidget {
+  final String videoId;
+  final String title;
+
+  const _FullScreenVideoPlayer({
+    required this.videoId,
+    required this.title,
+  });
+
+  @override
+  State<_FullScreenVideoPlayer> createState() => _FullScreenVideoPlayerState();
+}
+
+class _FullScreenVideoPlayerState extends State<_FullScreenVideoPlayer> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+        enableCaption: true,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16.sp),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  progressIndicatorColor: const Color(0xFF4CAF50),
+                  progressColors: const ProgressBarColors(
+                    playedColor: Color(0xFF4CAF50),
+                    handleColor: Color(0xFF4CAF50),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -32,6 +32,18 @@ class TrainingController extends GetxController implements GetxService {
   bool _inputBaselineView = false;
   bool get inputBaselineView => _inputBaselineView;
 
+  bool _showSwingCount = false;
+  bool get showSwingCount => _showSwingCount;
+
+  bool _showSwingSpeedInput = false;
+  bool get showSwingSpeedInput => _showSwingSpeedInput;
+
+  int _currentSwingNumber = 1;
+  int get currentSwingNumber => _currentSwingNumber;
+
+  String _currentSwingSpeed = '';
+  String get currentSwingSpeed => _currentSwingSpeed;
+
   bool _trainingFinishView = false;
   bool get trainingFinishView => _trainingFinishView;
 
@@ -157,7 +169,62 @@ class TrainingController extends GetxController implements GetxService {
     _showTimer = false;
     _showTrainingDetails = false;
     _inputBaselineView = true;
+    _showSwingCount = false;
+    _showSwingSpeedInput = false;
     update();
+  }
+
+  void showSwingCountScreen(int swingNumber) {
+    _currentSwingNumber = swingNumber;
+    _showSwingCount = true;
+    _showTimer = false;
+    _showTrainingDetails = false;
+    _inputBaselineView = false;
+    _showSwingSpeedInput = false;
+    update();
+    // Auto navigate to speed input after 2 seconds
+    Future.delayed(Duration(seconds: 2), () {
+      if (_showSwingCount) {
+        showSwingSpeedInputScreen();
+      }
+    });
+  }
+
+  void showSwingSpeedInputScreen() {
+    _currentSwingSpeed = '';
+    _showSwingSpeedInput = true;
+    _showSwingCount = false;
+    _showTimer = false;
+    _showTrainingDetails = false;
+    _inputBaselineView = false;
+    update();
+  }
+
+  void addSwingSpeedDigit(String digit) {
+    _currentSwingSpeed += digit;
+    update();
+  }
+
+  void removeSwingSpeedDigit() {
+    if (_currentSwingSpeed.isNotEmpty) {
+      _currentSwingSpeed = _currentSwingSpeed.substring(0, _currentSwingSpeed.length - 1);
+      update();
+    }
+  }
+
+  void confirmSwingSpeed() {
+    final speed = int.tryParse(_currentSwingSpeed);
+    if (speed != null && speed > 0) {
+      addBaselineInput(speed);
+      _currentSwingNumber++;
+      if (_currentSwingNumber <= 5) {
+        showSwingCountScreen(_currentSwingNumber);
+      } else {
+        _showSwingSpeedInput = false;
+        _showSwingCount = false;
+        update();
+      }
+    }
   }
 
   void addBaselineInput(int value) {

@@ -1,5 +1,6 @@
 import 'package:startup_repo/imports.dart';
 import '../controller/training_controller.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrainingDetailsScreen extends StatelessWidget {
   const TrainingDetailsScreen({super.key});
@@ -27,6 +28,7 @@ class TrainingDetailsScreen extends StatelessWidget {
           backgroundColor: Colors.black,
           body: Column(
             children: [
+              // TOP BAR
               Container(
                 margin: EdgeInsets.only(top: 12.h),
                 width: 40.w,
@@ -36,6 +38,7 @@ class TrainingDetailsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
+
               Expanded(
                 child: SafeArea(
                   child: SingleChildScrollView(
@@ -43,6 +46,7 @@ class TrainingDetailsScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // TITLE
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,100 +55,62 @@ class TrainingDetailsScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Up next:',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    'Baseline Test -\nNormal Golf\nSwings',
+                                    'Baseline Test -Normal\nGolfSwings',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 28.sp,
                                       fontWeight: FontWeight.bold,
-                                      height: 1.2,
+                                      height: 1.5,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[900],
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: Text(
-                                _formatTime(controller.currentTime),
-                                style: TextStyle(
-                                  color: const Color(0xFF4CAF50),
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         SizedBox(height: 24.h),
+
+                        // VIDEO PLAYER
                         _buildVideoPlayer(),
-                        SizedBox(height: 32.h),
-                        Text(
-                          'PREPARE TO SWING',
-                          style: TextStyle(
-                            color: const Color(0xFF4CAF50),
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        Text(
-                          'DOMINANT',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          '2 WEIGHTS OR DRIVER',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 22.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 64.h),
+
+                        SizedBox(height: 84.h),
+
+                        // START BUTTON
                         Center(
                           child: Column(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (exercise != null) {
-                                    if (exercise.time > 0) {
-                                      controller.startTimer(exercise.time.toInt());
-                                    } else if (exercise.requiresInput) {
-                                      controller.showInputBaseline();
-                                      Get.back();
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    if (exercise != null) {
+                                      if (exercise.time > 0) {
+                                        controller.startTimer(exercise.time.toInt());
+                                      } else if (exercise.requiresInput) {
+                                        controller.showInputBaseline();
+                                        Get.back();
+                                      } else {
+                                        controller.nextStep();
+                                        Get.back();
+                                      }
                                     } else {
-                                      controller.nextStep();
-                                      Get.back();
+                                      controller.startTimer(5);
                                     }
-                                  } else {
-                                    controller.startTimer(5);
-                                  }
-                                },
-                                child: Text(
-                                  'START',
-                                  style: TextStyle(
-                                    color: const Color(0xFF4CAF50),
-                                    fontSize: 48.sp,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 2,
+                                  },
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                                    child: Text(
+                                      'START',
+                                      style: TextStyle(
+                                        color: const Color(0xFF4CAF50),
+                                        fontSize: 48.sp,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -159,65 +125,34 @@ class TrainingDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+
                         SizedBox(height: 48.h),
-                        Container(
-                          height: 6.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[800],
-                            borderRadius: BorderRadius.circular(30.r),
-                          ),
-                          child: Stack(
-                            children: [
-                              FractionallySizedBox(
-                                alignment: Alignment.centerLeft,
-                                widthFactor: (controller.progress / 100).clamp(0.0, 1.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Color(0xFF5CBF60),
-                                        Color(0xFF4CAF50),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(30.r),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 24.h),
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.quitTraining();
-                            },
-                            child: Text(
-                              'Quit training',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: 14.sp,
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.grey[500],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
                       ],
                     ),
                   ),
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(bottom: 12.h),
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey[700],
-                  borderRadius: BorderRadius.circular(2.r),
+
+              // --- PROGRESS BAR + QUIT TRAINING ---
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 16.h),
+                child: Column(
+                  children: [
+                    buildProgressBar(controller.progress),
+                    SizedBox(height: 16.h),
+                    GestureDetector(
+                      onTap: controller.quitTraining,
+                      child: Text(
+                        'Quit training',
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14.sp,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -227,6 +162,9 @@ class TrainingDetailsScreen extends StatelessWidget {
     );
   }
 
+  // -------------------------------------------------------------------------
+  // TIMER SCREEN
+  // -------------------------------------------------------------------------
   Widget _buildTimerView(TrainingController controller, BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -248,89 +186,22 @@ class TrainingDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Up next:',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                'Baseline Test - Normal Golf Swings',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Text(
-                            _formatTime(controller.currentTime),
-                            style: TextStyle(
-                              color: const Color(0xFF4CAF50),
-                              fontSize: 20.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                    SizedBox(height: 24.h),
+                    Text(
+                      'Baseline Test - Normal Golf Swings',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 24.h),
                     _buildVideoPlayer(),
-                    SizedBox(height: 32.h),
-                    Text(
-                      'PREPARE TO SWING',
-                      style: TextStyle(
-                        color: const Color(0xFF4CAF50),
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'DOMINANT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      '2 WEIGHTS OR DRIVER',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Iconsax.timer,
-                          color: Colors.white,
-                          size: 24.sp,
-                        ),
+                        Icon(Iconsax.timer, color: Colors.white, size: 24.sp),
                         SizedBox(width: 8.w),
                         Text(
                           _formatTime(controller.currentTime),
@@ -355,62 +226,22 @@ class TrainingDetailsScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 24.h),
-                    Container(
-                      height: 6.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[800],
-                        borderRadius: BorderRadius.circular(30.r),
-                      ),
-                      child: Stack(
-                        children: [
-                          FractionallySizedBox(
-                            alignment: Alignment.centerLeft,
-                            widthFactor: (controller.progress / 100).clamp(0.0, 1.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFF5CBF60),
-                                    Color(0xFF4CAF50),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(30.r),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    buildProgressBar(controller.progress),
                     SizedBox(height: 24.h),
-                    Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          controller.quitTraining();
-                        },
-                        child: Text(
-                          'Quit training',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 14.sp,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.grey[500],
-                          ),
+                    GestureDetector(
+                      onTap: controller.quitTraining,
+                      child: Text(
+                        'Quit training',
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 14.sp,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.grey[500],
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: Colors.grey[700],
-                borderRadius: BorderRadius.circular(2.r),
               ),
             ),
           ],
@@ -419,78 +250,74 @@ class TrainingDetailsScreen extends StatelessWidget {
     );
   }
 
-  String _formatTime(int seconds) {
-    final minutes = seconds ~/ 60;
-    final secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
-  }
-
-  Widget _buildVideoPlayer() {
+  // -------------------------------------------------------------------------
+  // PROGRESS BAR (IMAGE STYLE)
+  // -------------------------------------------------------------------------
+  Widget buildProgressBar(double progress) {
     return Container(
-      height: 200.h,
+      width: double.infinity,
+      height: 22.h,
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.grey[700],
+        borderRadius: BorderRadius.circular(40.r),
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.all(16.sp),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 40.w,
-                  height: 40.w,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[700],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.error_outline,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'This video is unavailable',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Error code: 152 - 15',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 12.h,
-            right: 12.w,
-            child: Icon(
-              Icons.play_circle_outline,
-              color: Colors.white,
-              size: 32.sp,
+          FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: (progress / 100).clamp(0.0, 1.0),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: const Color(0xFF3FD156),
+                borderRadius: BorderRadius.circular(40.r),
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  // -------------------------------------------------------------------------
+  // VIDEO PLAYER
+  // -------------------------------------------------------------------------
+  Widget _buildVideoPlayer() {
+    final videoId =
+        YoutubePlayer.convertUrlToId('https://www.youtube.com/watch?v=IF0kLstvX6M') ?? 'IF0kLstvX6M';
+
+    final controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+    );
+
+    return Container(
+      height: 200.h,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: YoutubePlayer(
+          controller: controller,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: const Color(0xFF4CAF50),
+          progressColors: const ProgressBarColors(
+            playedColor: Color(0xFF4CAF50),
+            handleColor: Color(0xFF4CAF50),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // -------------------------------------------------------------------------
+  // FORMAT TIME
+  // -------------------------------------------------------------------------
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 }

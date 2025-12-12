@@ -3,6 +3,7 @@ import 'package:startup_repo/imports.dart';
 import '../controller/home_controller.dart';
 import '../../data/model/home_menu.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -46,6 +47,16 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildVideoPlayer(HomeController controller, BuildContext context) {
+    final videoId =
+        YoutubePlayer.convertUrlToId('https://www.youtube.com/watch?v=IF0kLstvX6M') ?? 'IF0kLstvX6M';
+    final youtubeController = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -56,61 +67,17 @@ class HomeScreen extends StatelessWidget {
               color: Colors.grey[900],
               borderRadius: BorderRadius.circular(12.r),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: 16.w,
-                  top: 16.h,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40.w,
-                        height: 40.w,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[700],
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline,
-                          color: Colors.white,
-                          size: 24.sp,
-                        ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Video unavailable',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            'This video is unavailable',
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: YoutubePlayer(
+                controller: youtubeController,
+                showVideoProgressIndicator: true,
+                progressIndicatorColor: const Color(0xFF4CAF50),
+                progressColors: const ProgressBarColors(
+                  playedColor: Color(0xFF4CAF50),
+                  handleColor: Color(0xFF4CAF50),
                 ),
-                Positioned(
-                  bottom: 16.h,
-                  right: 16.w,
-                  child: Icon(
-                    Icons.play_circle_outline,
-                    color: Colors.white,
-                    size: 32.sp,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           SizedBox(height: 16.h),

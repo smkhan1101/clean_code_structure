@@ -1,4 +1,5 @@
 import 'package:startup_repo/imports.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -35,32 +36,42 @@ class AppBottomNavBar extends StatelessWidget {
         elevation: 0,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Iconsax.home),
-            activeIcon: Icon(Iconsax.home),
-            label: 'home'.tr,
+            icon: _buildSvgIcon('assets/images/buttom nav/home.svg', Colors.grey),
+            activeIcon: _buildSvgIcon('assets/images/buttom nav/home.svg', const Color(0xFF4CAF50)),
+            label: 'Home'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Iconsax.document),
-            activeIcon: Icon(Iconsax.document),
-            label: 'feed'.tr,
+            icon: _buildSvgIcon('assets/images/buttom nav/feed.svg', Colors.grey),
+            activeIcon: _buildSvgIcon('assets/images/buttom nav/feed.svg', const Color(0xFF4CAF50)),
+            label: 'Feed'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Iconsax.chart),
-            activeIcon: Icon(Iconsax.chart),
-            label: 'progress'.tr,
+            icon: _buildSvgIcon('assets/images/buttom nav/progress.svg', Colors.grey),
+            activeIcon: _buildSvgIcon('assets/images/buttom nav/progress.svg', const Color(0xFF4CAF50)),
+            label: 'Progress'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Iconsax.award),
-            activeIcon: Icon(Iconsax.award),
-            label: 'rewards'.tr,
+            icon: _buildSvgIcon('assets/images/buttom nav/rewards.svg', Colors.grey),
+            activeIcon: _buildSvgIcon('assets/images/buttom nav/rewards.svg', const Color(0xFF4CAF50)),
+            label: 'Rewards'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Iconsax.user),
-            activeIcon: Icon(Iconsax.user),
-            label: 'account'.tr,
+            icon: _buildSvgIcon('assets/images/buttom nav/account.svg', Colors.grey),
+            activeIcon: _buildSvgIcon('assets/images/buttom nav/account.svg', const Color(0xFF4CAF50)),
+            label: 'Account'.tr,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSvgIcon(String assetPath, Color color) {
+    return SvgPicture.asset(
+      assetPath,
+      width: 24.sp,
+      height: 24.sp,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      fit: BoxFit.contain,
     );
   }
 

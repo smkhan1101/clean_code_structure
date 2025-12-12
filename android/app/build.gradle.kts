@@ -56,11 +56,14 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storeFile = file(env.getProperty("KEYSTORE_PATH") ?: "")
-            storePassword = env.getProperty("KEYSTORE_PASSWORD")
-            keyAlias = env.getProperty("KEYSTORE_ALIAS")
-            keyPassword = env.getProperty("KEY_PASSWORD")
+        val keystorePath = env.getProperty("KEYSTORE_PATH")
+        if (keystorePath != null && file(keystorePath).exists()) {
+            create("release") {
+                storeFile = file(keystorePath)
+                storePassword = env.getProperty("KEYSTORE_PASSWORD")
+                keyAlias = env.getProperty("KEYSTORE_ALIAS")
+                keyPassword = env.getProperty("KEY_PASSWORD")
+            }
         }
     }
 
@@ -69,7 +72,10 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            val releaseSigningConfig = signingConfigs.findByName("release")
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
             isMinifyEnabled = true
             isShrinkResources = true
         }
