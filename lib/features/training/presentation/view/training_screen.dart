@@ -1,7 +1,9 @@
 import 'package:startup_repo/imports.dart';
 import '../controller/training_controller.dart';
 import '../../../../core/widgets/loading.dart';
+import '../../../../core/widgets/sign_in_button.dart';
 import 'training_details_screen.dart';
+
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrainingScreen extends StatefulWidget {
@@ -12,7 +14,7 @@ class TrainingScreen extends StatefulWidget {
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.grey.withOpacity(0.8),
+      barrierColor: Color(0xFF1E1E1E),
       builder: (context) => const TrainingScreen(),
     );
   }
@@ -63,7 +65,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.grey.withOpacity(0.8),
+      barrierColor: Color(0xFF1E1E1E),
       builder: (context) => _WarmUpScreen(),
     );
   }
@@ -75,7 +77,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
       builder: (controller) {
         if (controller.isLoading) {
           return Container(
-            height: MediaQuery.of(context).size.height * 0.95,
+            height: MediaQuery.of(context).size.height * 0.85,
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
@@ -85,7 +87,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
         }
 
         return Container(
-          height: MediaQuery.of(context).size.height * 0.85,
+          height: MediaQuery.of(context).size.height * 0.93,
           decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
@@ -117,25 +119,12 @@ class _TrainingScreenState extends State<TrainingScreen> {
       return _buildInputBaselineView(controller, context);
     }
 
-    if (controller.showTrainingDetails) {
-      return _buildTrainingDetailsView(controller, context);
-    }
-
     return _buildStartView(controller, context);
   }
 
   Widget _buildStartView(TrainingController controller, BuildContext context) {
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.only(top: 12.h),
-          width: 40.w,
-          height: 4.h,
-          decoration: BoxDecoration(
-            color: Colors.grey[700],
-            borderRadius: BorderRadius.circular(2.r),
-          ),
-        ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 20.sp),
           child: Row(
@@ -143,11 +132,12 @@ class _TrainingScreenState extends State<TrainingScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Measure your baseline',
+                  'Measure\nyour baseline',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
+                    height: 1.2,
                   ),
                 ),
               ),
@@ -155,16 +145,23 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 icon: Container(
-                  width: 30.w,
-                  height: 30.w,
+                  width: 35.w,
+                  height: 35.w,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF4CAF50),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color.fromARGB(255, 33, 224, 84),
+                        Color.fromARGB(255, 13, 89, 32),
+                      ],
+                    ),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.close,
                     color: Colors.white,
-                    size: 16.sp,
+                    size: 24.sp,
                   ),
                 ),
                 onPressed: controller.quitTraining,
@@ -180,7 +177,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.sp),
                 child: _buildVideoPlayer(),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 20.h),
               // Scrollable Text Section
               Expanded(
                 child: SingleChildScrollView(
@@ -192,32 +189,43 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         'Overview',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.sp,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
+                          height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 2.h),
                       Text(
                         'Once you press Start, you will be asked to swing 5 times with Rypstick (2 weights) or driver. Knowing your baseline speed will help track your progress as you go through training.',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.sp,
-                          height: 1.5,
+                          fontSize: 17.sp,
+                          height: 1.3,
                         ),
                       ),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 18.h),
                       Text(
                         'You will need:',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.sp,
+                          fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
+                          height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 12.h),
-                      _buildRequirementItem('A RypRadar or other speed measurement tool.', index: 1),
-                      SizedBox(height: 8.h),
-                      _buildRequirementItem('A Rypstick (2 weights) or driver.', index: 2),
+                      SizedBox(height: 18.h),
+                      _buildRequirementItem('1. A RypRadar or other speed measurement tool.'),
+                      SizedBox(height: 18.h),
+                      _buildRequirementItem('2. A Rypstick (2 weights) or driver.'),
+                      SizedBox(height: 18.h),
+                      Text(
+                        'Swipe and start when you\'re ready!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17.sp,
+                          height: 1.2,
+                        ),
+                      ),
                       SizedBox(height: 12.h),
                     ],
                   ),
@@ -228,11 +236,12 @@ class _TrainingScreenState extends State<TrainingScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.sp),
                 child: Column(
                   children: [
+                    SizedBox(height: 14.h),
                     Divider(
-                      color: Colors.grey[700],
+                      color: Colors.grey[600],
                       thickness: 1,
                     ),
-                    SizedBox(height: 32.h),
+                    SizedBox(height: 24.h),
                     Row(
                       children: [
                         Container(
@@ -254,7 +263,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                             side: BorderSide.none,
                           ),
                         ),
-                        SizedBox(width: 12.w),
+                        SizedBox(width: 18.w),
                         Text(
                           'I have warmed up',
                           style: TextStyle(
@@ -277,24 +286,23 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 32.h),
+                    SizedBox(height: 16.h),
                     _buildSlideToStartButton(controller, _hasWarmedUp),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 8.h),
                     Center(
                       child: GestureDetector(
                         onTap: () {},
                         child: Text(
                           'I don\'t have a radar',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.sp,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.white,
+                            color: Color(0xFF777576),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 34.h),
                   ],
                 ),
               ),
@@ -308,24 +316,25 @@ class _TrainingScreenState extends State<TrainingScreen> {
   Widget _buildVideoPlayer() {
     if (_videoController == null) {
       return Container(
-        height: 200.h,
+        height: 150.h,
         decoration: BoxDecoration(
           color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Center(
-          child: CircularProgressIndicator(
-            color: const Color(0xFF4CAF50),
+          child: const CircularProgressIndicator(
+            color: Colors.green,
+            strokeWidth: 3.0,
           ),
         ),
       );
     }
 
     return Container(
-      height: 200.h,
+      height: 190.h,
       decoration: BoxDecoration(
         color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.r),
@@ -342,38 +351,17 @@ class _TrainingScreenState extends State<TrainingScreen> {
     );
   }
 
-  Widget _buildRequirementItem(String text, {int? index}) {
+  Widget _buildRequirementItem(String text) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (index != null) ...[
-          Text(
-            '$index.',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15.sp,
-              height: 1.5,
-            ),
-          ),
-          SizedBox(width: 8.w),
-        ] else
-          Container(
-            margin: EdgeInsets.only(top: 6.h),
-            width: 6.w,
-            height: 6.w,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-          ),
-        SizedBox(width: 4.w),
         Expanded(
           child: Text(
             text,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 15.sp,
-              height: 1.5,
+              fontSize: 17.sp,
+              height: 1.2,
             ),
           ),
         ),
@@ -391,179 +379,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
     );
   }
 
-  Widget _buildTrainingDetailsView(TrainingController controller, BuildContext context) {
-    final exercise = controller.getCurrentExercise();
-    if (exercise == null) {
-      return Center(child: Text('no_exercise'.tr));
-    }
-
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: 12.h),
-          width: 40.w,
-          height: 4.h,
-          decoration: BoxDecoration(
-            color: Colors.grey[700],
-            borderRadius: BorderRadius.circular(2.r),
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SafeArea(
-                  bottom: false,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 4.h),
-                            Text(
-                              'Baseline Test -\nNormal Golf\nSwings',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.bold,
-                                height: 1.2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                _buildTrainingVideoPlayer(),
-                SizedBox(height: 32.h),
-
-                Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 60.h,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFF5CBF60),
-                              Color(0xFF4CAF50),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (exercise.time > 0) {
-                              controller.startTimer(exercise.time.toInt());
-                            } else if (exercise.requiresInput) {
-                              controller.showSwingCountScreen(1);
-                            } else {
-                              controller.nextStep();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            elevation: 0,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                          ),
-                          child: Text(
-                            'START',
-                            style: TextStyle(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Text(
-                        'Press when ready',
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40.h),
-                // Progress bar
-                Container(
-                  height: 6.h,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Stack(
-                    children: [
-                      FractionallySizedBox(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: (controller.progress / 100).clamp(0.0, 1.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFF5CBF60),
-                                Color(0xFF4CAF50),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(30.r),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                Center(
-                  child: GestureDetector(
-                    onTap: controller.quitTraining,
-                    child: Text(
-                      'Quit training',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14.sp,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: 12.h),
-          width: 40.w,
-          height: 4.h,
-          decoration: BoxDecoration(
-            color: Colors.grey[700],
-            borderRadius: BorderRadius.circular(2.r),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildTrainingVideoPlayer() {
     if (_trainingVideoController == null) {
       return Container(
@@ -573,8 +388,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
-          child: CircularProgressIndicator(
-            color: const Color(0xFF4CAF50),
+          child: const CircularProgressIndicator(
+            color: Colors.green,
+            strokeWidth: 3.0,
           ),
         ),
       );
@@ -915,16 +731,23 @@ class _SlideToStartButtonState extends State<_SlideToStartButton> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final buttonWidth = screenWidth - 40.w;
-    final maxDrag = buttonWidth - 56.w;
+    final buttonWidth = screenWidth - 20.w;
+    final maxDrag = buttonWidth - 70.w;
 
     return Opacity(
       opacity: widget.enabled ? 1.0 : 0.5,
       child: Container(
-        height: 56.h,
+        height: 70.h,
         decoration: BoxDecoration(
-          color: widget.enabled ? const Color(0xFF4CAF50) : Colors.grey[800],
-          borderRadius: BorderRadius.circular(28.r),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF237537),
+              Color(0xFF33C258),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(60.r),
         ),
         child: Stack(
           children: [
@@ -966,19 +789,25 @@ class _SlideToStartButtonState extends State<_SlideToStartButton> {
                     }
                   },
                   child: Container(
-                    width: 56.w,
-                    height: 56.w,
+                    width: 70.w,
+                    height: 70.w,
                     margin: EdgeInsets.all(2.h),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: const Color(0xFF4CAF50),
-                        size: 20.sp,
-                      ),
+                      child: _dragPosition >= maxDrag * 0.8
+                          ? Icon(
+                              Icons.check,
+                              color: const Color(0xFF4CAF50),
+                              size: 28.sp,
+                            )
+                          : Icon(
+                              Icons.arrow_forward,
+                              color: const Color(0xFF4CAF50),
+                              size: 24.sp,
+                            ),
                     ),
                   ),
                 ),
@@ -989,18 +818,18 @@ class _SlideToStartButtonState extends State<_SlideToStartButton> {
                 top: 0,
                 bottom: 0,
                 child: Container(
-                  width: 56.w,
-                  height: 56.w,
+                  width: 70.w,
+                  height: 70.w,
                   margin: EdgeInsets.all(2.h),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Color(0x76BDF4BC).withOpacity(0.9),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
                     child: Icon(
                       Icons.arrow_forward,
-                      color: Colors.white.withOpacity(0.5),
-                      size: 20.sp,
+                      color: Color(0xFF19D00F).withOpacity(0.8),
+                      size: 24.sp,
                     ),
                   ),
                 ),
@@ -1049,54 +878,49 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.9,
+      height: MediaQuery.of(context).size.height * 0.93,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
       ),
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 12.h),
-            width: 40.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: Colors.grey[700],
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 20.sp),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Stack(
               children: [
-                Expanded(
+                Center(
                   child: Text(
                     'Warm up',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 32.sp,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  icon: Container(
-                    width: 30.w,
-                    height: 30.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50),
-                      shape: BoxShape.circle,
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: Container(
+                      width: 24.w,
+                      height: 24.w,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4CAF50),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 18.sp,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 16.sp,
-                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
@@ -1108,12 +932,12 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildWarmUpVideoPlayer(),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 18.h),
                   Text(
                     'Overview',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.sp,
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -1122,44 +946,44 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
                     'Please complete these steps before training. A quick warmup helps prevent injuries and makes sure you gain your top speed.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14.sp,
-                      height: 1.5,
+                      fontSize: 15.sp,
+                      height: 1.2,
                     ),
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 18.h),
                   Text(
                     'You will need:',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.sp,
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 18.h),
                   Text(
                     'A Rypstick.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15.sp,
-                      height: 1.5,
+                      fontSize: 16.sp,
+                      height: 1.2,
                     ),
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 10.h),
                   Text(
                     'Time to complete:',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.sp,
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 8.h),
                   Text(
                     'Around 5 minutes.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15.sp,
-                      height: 1.5,
+                      fontSize: 16.sp,
+                      height: 1.2,
                     ),
                   ),
                   SizedBox(height: 40.h),
@@ -1169,39 +993,13 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
           ),
           Padding(
             padding: EdgeInsets.all(20.sp),
-            child: Container(
-              width: double.infinity,
-              height: 56.h,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF5CBF60),
-                    Color(0xFF4CAF50),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  elevation: 0,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-                child: Text(
-                  'Done',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            child: SignInButton(
+              onPressed: () => Navigator.pop(context),
+              text: 'Done',
+              isValid: true,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              height: 65.h,
             ),
           ),
           SizedBox(height: 20.h),
@@ -1219,8 +1017,9 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
-          child: CircularProgressIndicator(
-            color: const Color(0xFF4CAF50),
+          child: const CircularProgressIndicator(
+            color: Colors.green,
+            strokeWidth: 3.0,
           ),
         ),
       );

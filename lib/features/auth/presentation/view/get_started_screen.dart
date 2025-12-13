@@ -1,5 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:startup_repo/features/auth/presentation/controller/get_started_controller.dart';
+import 'package:startup_repo/core/widgets/getstarted_button.dart';
 import 'package:startup_repo/imports.dart';
 
 class GetStartedScreen extends StatelessWidget {
@@ -61,38 +62,9 @@ class GetStartedScreen extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xFF5CBF60),
-                                    Color(0xFF4CAF50),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(14.r),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: controller.handleGetStarted,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  foregroundColor: Colors.white,
-                                  padding: EdgeInsets.symmetric(vertical: 18.h),
-                                  minimumSize: Size(double.infinity, 56.h),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.r),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Get started',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
+                            GradientButton(
+                              onPressed: controller.handleGetStarted,
+                              text: 'Get started',
                             ),
                             SizedBox(height: 4.h),
                             TextButton(
@@ -100,10 +72,11 @@ class GetStartedScreen extends StatelessWidget {
                               child: Text(
                                 'I already have an account',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 14.sp,
+                                  color: Colors.white.withOpacity(0.6),
+                                  fontSize: 13.sp,
+                                  fontWeight: FontWeight.w900,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: Colors.white,
+                                  decorationColor: Colors.white.withOpacity(0.7),
                                 ),
                               ),
                             ),
@@ -113,6 +86,8 @@ class GetStartedScreen extends StatelessWidget {
                       SizedBox(height: 34.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
                         children: [
                           TextButton(
                             onPressed: controller.handlePrivacyPolicy,
@@ -120,7 +95,8 @@ class GetStartedScreen extends StatelessWidget {
                               'Privacy policy',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.7),
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
+                                letterSpacing: 0.5,
                               ),
                             ),
                           ),
@@ -128,7 +104,8 @@ class GetStartedScreen extends StatelessWidget {
                             ' • ',
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.7),
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
+                              letterSpacing: 0.5,
                             ),
                           ),
                           TextButton(
@@ -137,7 +114,8 @@ class GetStartedScreen extends StatelessWidget {
                               'Terms of service',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(0.7),
-                                fontSize: 12.sp,
+                                fontSize: 11.sp,
+                                letterSpacing: 0.5,
                               ),
                             ),
                           ),

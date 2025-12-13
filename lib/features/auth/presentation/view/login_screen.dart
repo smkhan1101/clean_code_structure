@@ -3,6 +3,7 @@ import 'package:startup_repo/core/helper/navigation.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/auth_controller.dart';
 import '../../../../core/widgets/confirmation_dialog.dart';
+import '../../../../core/widgets/sign_in_button.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool isLogin;
@@ -78,10 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 top: 0,
                 left: 0,
                 right: 0,
-                bottom: MediaQuery.of(context).size.height * 0.35,
+                bottom: MediaQuery.of(context).size.height * 0.45,
                 child: Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  height: MediaQuery.of(context).size.height * 0.5,
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
@@ -91,9 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Positioned(
                         top: 40.h,
-                        left: 0,
+                        left: 10,
                         child: IconButton(
-                          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24.sp),
+                          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 30.sp),
                           onPressed: () {
                             pop();
                           },
@@ -123,15 +124,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Transform.translate(
-                              offset: Offset(0, -20.h),
-                              child: Text(
-                                widget.isLogin ? 'welcome_back'.tr : 'welcome_to_rypstick'.tr,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28.sp,
-                                  fontWeight: FontWeight.bold,
+                              offset: Offset(0, -30.h),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 3.h),
+                                child: Text(
+                                  widget.isLogin ? 'welcome_back'.tr : 'welcome_to_rypstick'.tr,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                             SizedBox(height: 2.h),
@@ -145,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 hintText: 'email'.tr,
                                 hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16.sp),
                                 filled: true,
-                                fillColor: Colors.grey[900],
+                                fillColor: Color(0xFF191919),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.r),
                                   borderSide: BorderSide(color: Colors.grey[700]!, width: 1),
@@ -158,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(10.r),
                                   borderSide: BorderSide(color: Colors.grey[600]!, width: 1),
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
                               ),
                             ),
                             SizedBox(height: 8.h),
@@ -182,27 +186,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hintText: 'password'.tr,
                                   hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16.sp),
                                   filled: true,
-                                  fillColor: Colors.grey[900],
+                                  fillColor: Color(0xFF191919),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     borderSide: BorderSide(color: Colors.grey[700]!, width: 1),
                                   ),
                                   enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     borderSide: BorderSide(color: Colors.grey[700]!, width: 1),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderRadius: BorderRadius.circular(10.r),
                                     borderSide: BorderSide(color: Colors.grey[600]!, width: 1),
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       obscurePassword.value
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
+                                          ? Icons.visibility_off_outlined
+                                          : Icons.remove_red_eye_outlined,
                                       color: Colors.grey[400],
-                                      size: 20.sp,
+                                      size: 22.sp,
                                     ),
                                     onPressed: togglePasswordVisibility,
                                   ),
@@ -214,51 +218,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               builder: (authController) {
                                 final isValid =
                                     authController.email.isNotEmpty && authController.password.isNotEmpty;
-                                return AbsorbPointer(
-                                  absorbing: !isValid,
-                                  child: Opacity(
-                                    opacity: isValid ? 1.0 : 0.5,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Color(0xFF5CBF60),
-                                            Color(0xFF4CAF50),
-                                          ],
-                                        ),
-                                        borderRadius: BorderRadius.circular(8.r),
-                                      ),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (widget.isLogin) {
-                                            controller.login();
-                                          } else {
-                                            controller.register();
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          elevation: 0,
-                                          foregroundColor: Colors.white,
-                                          padding: EdgeInsets.symmetric(vertical: 18.h),
-                                          minimumSize: Size(double.infinity, 50.h),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10.r),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          widget.isLogin ? 'sign_in'.tr : 'sign_up'.tr,
-                                          style: TextStyle(
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                return SignInButton(
+                                  onPressed: () {
+                                    if (widget.isLogin) {
+                                      controller.login();
+                                    } else {
+                                      controller.register();
+                                    }
+                                  },
+                                  text: widget.isLogin ? 'sign_in'.tr : 'sign_up'.tr,
+                                  isValid: isValid,
                                 );
                               },
                             ),
@@ -271,25 +240,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Text(
                                   'forgot_password'.tr,
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
-                                    fontSize: 14.sp,
+                                    color: Colors.white.withOpacity(0.6),
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w900,
                                     decoration: TextDecoration.underline,
-                                    decorationColor: Colors.white,
-                                    decorationThickness: 1,
+                                    decorationColor: Colors.white.withOpacity(0.7),
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 30.h),
+                            SizedBox(height: 32.h),
                             Text(
                               'copy_rights'.tr,
                               style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12.sp,
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: 11.sp,
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: 20.h),
+                            SizedBox(height: 0.h),
                           ],
                         ),
                       ),

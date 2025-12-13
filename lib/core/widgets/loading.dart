@@ -22,7 +22,10 @@ class Loading extends StatelessWidget {
     return SizedBox(
       width: size.sp,
       height: size.sp,
-      child: const CircularProgressIndicator.adaptive(),
+      child: const CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+        strokeWidth: 3.0,
+      ),
     );
   }
 }

@@ -9,7 +9,7 @@ class TutorialsScreen extends StatefulWidget {
       context: Get.context!,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.grey.withOpacity(0.8),
+      barrierColor: Color(0xFF1E1E1E),
       builder: (context) => const TutorialsScreen(),
     );
   }
@@ -44,33 +44,26 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
         : ['Casting', 'Chicken Wing', 'Early Extension', 'Flat Shoulder', 'Grounded', 'Harpooner', 'Slicer'];
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.95,
+      height: MediaQuery.of(context).size.height * 0.93,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
       ),
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 12.h),
-            width: 40.w,
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: Colors.grey[700],
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 16.h),
+            padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Text(
-                  'Tutorials',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
+                Center(
+                  child: Text(
+                    'Tutorials',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 Align(
@@ -82,13 +75,20 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                       width: 30.w,
                       height: 30.w,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF4CAF50),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color.fromARGB(255, 33, 224, 84),
+                            Color.fromARGB(255, 13, 89, 32),
+                          ],
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.close,
                         color: Colors.white,
-                        size: 16.sp,
+                        size: 24.sp,
                       ),
                     ),
                     onPressed: () => Get.back(),
@@ -97,6 +97,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
               ],
             ),
           ),
+          SizedBox(height: 4.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.sp),
             child: Container(
@@ -116,7 +117,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12.sp),
+                        padding: EdgeInsets.symmetric(vertical: 7.sp),
                         decoration: BoxDecoration(
                           color: selectedMain == 0 ? Colors.grey[700] : Colors.transparent,
                           borderRadius: BorderRadius.only(
@@ -147,14 +148,14 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12.sp),
+                        padding: EdgeInsets.symmetric(vertical: 7.sp),
                         decoration: BoxDecoration(
                           color: selectedMain == 1 ? Colors.grey[700] : Colors.transparent,
                           borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(8.sp),
-                            bottomRight: Radius.circular(8.sp),
-                            topLeft: selectedMain == 1 ? Radius.circular(8.sp) : Radius.zero,
-                            bottomLeft: selectedMain == 1 ? Radius.circular(8.sp) : Radius.zero,
+                            topRight: Radius.circular(6.sp),
+                            bottomRight: Radius.circular(6.sp),
+                            topLeft: selectedMain == 1 ? Radius.circular(6.sp) : Radius.zero,
+                            bottomLeft: selectedMain == 1 ? Radius.circular(6.sp) : Radius.zero,
                           ),
                         ),
                         child: Text(
@@ -183,7 +184,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                   borderRadius: BorderRadius.circular(8.sp),
                 ),
                 child: Row(
-                  children: List.generate(8, (index) {
+                  children: List.generate(4, (index) {
                     final isSelected = selectedLevel == index;
                     return Expanded(
                       child: GestureDetector(
@@ -193,35 +194,21 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 10.sp),
+                          padding: EdgeInsets.symmetric(vertical: 7.sp),
                           decoration: BoxDecoration(
-                            color: isSelected ? Colors.grey[600] : Colors.transparent,
+                            color: isSelected ? const Color(0xFF333333) : Colors.transparent,
                             borderRadius: BorderRadius.circular(6.sp),
                           ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Text(
-                                  'L${index + 1}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                          child: Center(
+                            child: Text(
+                              'Level ${index + 1}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
                               ),
-                              if (index < 7)
-                                Positioned(
-                                  right: 0,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    width: 1,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -231,7 +218,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
               ),
             ),
           ],
-          SizedBox(height: 16.sp),
+          SizedBox(height: 10.sp),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
@@ -242,10 +229,17 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                 final videoId = videoIds[itemName] ?? 'IF0kLstvX6M';
 
                 return Container(
-                  margin: EdgeInsets.only(bottom: 12.sp),
+                  margin: EdgeInsets.only(bottom: 18.sp),
                   decoration: BoxDecoration(
-                    color: Colors.grey[900],
-                    borderRadius: BorderRadius.circular(12.r),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFF191919),
+                        Color(0xFF252525),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: Column(
                     children: [
@@ -272,7 +266,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                                       itemName,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16.sp,
+                                        fontSize: 18.sp,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -282,7 +276,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                                         'See video',
                                         style: TextStyle(
                                           color: Colors.grey[400],
-                                          fontSize: 14.sp,
+                                          fontSize: 16.sp,
                                         ),
                                       ),
                                     ],
@@ -292,7 +286,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                               Icon(
                                 isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                                 color: Colors.white,
-                                size: 24.sp,
+                                size: 30.sp,
                               ),
                             ],
                           ),

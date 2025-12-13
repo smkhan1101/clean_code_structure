@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:startup_repo/core/widgets/sign_in_button.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/auth_controller.dart';
 
@@ -48,7 +49,7 @@ class NotificationPermissionScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 50.h),
+                      SizedBox(height: 25.h),
                       Text(
                         'allow_notifications'.tr,
                         style: TextStyle(
@@ -58,13 +59,13 @@ class NotificationPermissionScreen extends StatelessWidget {
                           height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 25.h),
                       Text(
                         'notifications_desc'.tr,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.sp,
-                          height: 1.5,
+                          fontSize: 16.sp,
+                          height: 1.2,
                         ),
                       ),
                     ],
@@ -76,55 +77,29 @@ class NotificationPermissionScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF5CBF60),
-                          Color(0xFF4CAF50),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _requestNotificationPermission,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        minimumSize: Size(double.infinity, 56.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: Text(
-                        'allow'.tr,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                  SignInButton(
+                    onPressed: _requestNotificationPermission,
+                    text: 'allow'.tr,
+                    isValid: true,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 65.h,
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 25.h),
                   Center(
                     child: GestureDetector(
                       onTap: _onSkip,
                       child: Text(
                         'skip'.tr,
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF777576),
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),

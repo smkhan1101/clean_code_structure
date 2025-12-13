@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
           SizedBox(height: 16.h),
           Container(
             height: 1,
-            color: Colors.grey[800],
+            color: Colors.grey[600],
           ),
         ],
       ),
@@ -106,12 +106,28 @@ class HomeScreen extends StatelessWidget {
     final isFirstItem = index == 0;
     final isUpgradeItem =
         menu.title.toLowerCase().contains('upgrade') || menu.title.toLowerCase().contains('pro plan');
-    final cardColor = (isFirstItem || isUpgradeItem) ? const Color(0xFF4CAF50) : Colors.grey[900];
+    final useGradient = isFirstItem || isUpgradeItem;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: cardColor,
+        gradient: useGradient
+            ? const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF237537),
+                  Color(0xFF33C258),
+                ],
+              )
+            : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF191919),
+                  Color(0xFF252525),
+                ],
+              ),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Material(
@@ -120,7 +136,7 @@ class HomeScreen extends StatelessWidget {
           onTap: menu.enabled ? () => controller.onMenuTap(index) : null,
           borderRadius: BorderRadius.circular(12.r),
           child: Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.all(14.w),
             child: Row(
               children: [
                 Expanded(
@@ -136,12 +152,12 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       if (menu.description.isNotEmpty) ...[
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 0.h),
                         Text(
                           menu.description,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
-                            fontSize: 16.sp,
+                            fontSize: 18.sp,
                             letterSpacing: 0.0,
                           ),
                         ),
@@ -151,9 +167,9 @@ class HomeScreen extends StatelessWidget {
                 ),
                 if (menu.enabled)
                   Icon(
-                    Icons.arrow_forward_ios,
+                    Icons.arrow_forward,
                     color: Colors.white,
-                    size: 18.sp,
+                    size: 24.sp,
                   ),
               ],
             ),

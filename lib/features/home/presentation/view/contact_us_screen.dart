@@ -1,5 +1,6 @@
 import 'package:startup_repo/imports.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../../core/widgets/sign_in_button.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
@@ -23,19 +24,10 @@ class ContactUsScreen extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: EdgeInsets.all(20.sp),
+          padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 0.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                margin: EdgeInsets.only(top: 12.h, bottom: 4.h),
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey[700],
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -57,7 +49,14 @@ class ContactUsScreen extends StatelessWidget {
                         width: 30.w,
                         height: 30.w,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF4CAF50),
+                          gradient: const LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFF0D5920),
+                              Color(0xFF21E054),
+                            ],
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -71,7 +70,7 @@ class ContactUsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 20.h),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 child: RichText(
@@ -94,52 +93,26 @@ class ContactUsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 28.h),
-              Container(
-                width: double.infinity,
-                height: 56.h,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF5CBF60),
-                      Color(0xFF4CAF50),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final uri = Uri.parse('mailto:rypstickstaff@gmail.com');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
-                      }
-                      Get.back();
-                    } catch (e) {
-                      showToast('error_opening_email'.tr);
+              SizedBox(height: 50.h),
+              SignInButton(
+                onPressed: () async {
+                  try {
+                    final uri = Uri.parse('mailto:rypstickstaff@gmail.com');
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
                     }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    elevation: 0,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Open Mail app',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                    Get.back();
+                  } catch (e) {
+                    showToast('error_opening_email'.tr);
+                  }
+                },
+                text: 'Open Mail app',
+                isValid: true,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                height: 65.h,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
             ],
           ),
         ),

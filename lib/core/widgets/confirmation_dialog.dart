@@ -30,77 +30,97 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
-      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+      backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.90,
+        constraints: BoxConstraints(minHeight: 330.h),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF191919),
+              Color(0xFF252525),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  color: Colors.grey[700],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Image.asset(
+                    Images.appLogo,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 16.h),
-            Divider(
-              height: 1,
-              color: isDark ? Colors.grey[700] : Colors.grey[300],
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: isDark ? Colors.grey[300] : Colors.grey[700],
+              SizedBox(height: 20.h),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SizedBox(height: 24.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (actionText.toLowerCase() != 'ok')
+              SizedBox(height: 12.h),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 35.h),
+              Row(
+                children: [
                   Expanded(
-                    child: PrimaryOutlineButton(
-                      text: 'cancel'.tr,
+                    child: ElevatedButton(
                       onPressed: pop,
-                      textColor: context.textTheme.bodyLarge!.color,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[600],
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        'cancel'.tr,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
-                if (actionText.toLowerCase() != 'ok') SizedBox(width: 16.w),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF5CBF60),
-                          Color(0xFF4CAF50),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
+                  SizedBox(width: 12.w),
+                  Expanded(
                     child: ElevatedButton(
                       onPressed: () {
                         onAccept();
                         pop();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.grey[600],
+                        foregroundColor: const Color.fromARGB(255, 239, 21, 21),
                         padding: EdgeInsets.symmetric(vertical: 14.h),
-                        minimumSize: Size(double.infinity, 50.h),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -109,15 +129,15 @@ class ConfirmationDialog extends StatelessWidget {
                         actionText,
                         style: TextStyle(
                           fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

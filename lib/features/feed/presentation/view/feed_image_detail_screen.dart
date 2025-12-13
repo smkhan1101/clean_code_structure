@@ -22,7 +22,10 @@ class FeedImageDetailScreen extends StatelessWidget {
                 imageUrl: imageUri,
                 fit: BoxFit.contain,
                 placeholder: (context, url) => Center(
-                  child: CircularProgressIndicator(color: primaryColor),
+                  child: const CircularProgressIndicator(
+                    color: Colors.green,
+                    strokeWidth: 3.0,
+                  ),
                 ),
                 errorWidget: (context, url, error) => Center(
                   child: Icon(Iconsax.image, color: Colors.white, size: 64.sp),

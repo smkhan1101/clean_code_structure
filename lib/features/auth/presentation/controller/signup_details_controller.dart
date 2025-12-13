@@ -18,11 +18,16 @@ class SignupDetailsController extends GetxController {
   final selectedPreferredUnits = RxString('Yards, MPH');
   final hasTrainedBefore = RxBool(false);
 
-  final List<String> genderList = ['None', 'Male', 'Female', 'Other'];
+  final List<String> genderList = ['None', 'Male', 'Female', 'Other', 'Prefer not to answer'];
   final List<String> handList = ['Right-handed', 'Left-handed'];
-  final List<String> handicapList = List.generate(36, (i) => i.toString());
-  final List<String> shaftLengthList = ['None', 'Standard', 'Long', 'Short'];
-  final List<String> preferredUnitsList = ['Yards, MPH', 'Meters, KPH'];
+  final List<String> handicapList = [
+    for (int i = 10; i > 0; i--) '+$i',
+    '0',
+    for (int i = 1; i <= 40; i++) '$i',
+    'Beginner',
+  ];
+  final List<String> shaftLengthList = ['None', 'White 45"', 'Blue 44"', 'Green 41"', 'Orange 38"'];
+  final List<String> preferredUnitsList = ['Yards, MPH', 'Meters, KM/H', 'Yards,M/S', 'Meters,MPH'];
 
   final Map<String, String> preferredUnitsMap = {
     'Yards, MPH': 'Yards/MPH',
@@ -62,6 +67,40 @@ class SignupDetailsController extends GetxController {
       initialDate: selectedDate.value ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFF4CAF50),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.grey[600]!,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color.fromARGB(255, 56, 129, 58),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40.r),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            dialogBackgroundColor: Colors.white,
+            dialogTheme: DialogThemeData(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              elevation: 8,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != selectedDate.value) {
       selectedDate.value = picked;
@@ -136,7 +175,7 @@ class SignupDetailsController extends GetxController {
   }
 
   void handleGenderSelected(String value) {
-    selectedGender.value = value == 'None' ? '' : value;
+    selectedGender.value = value == 'None' || value == 'Prefer not to answer' ? '' : value;
     _validateForm();
   }
 
@@ -188,4 +227,3 @@ class SignupDetailsController extends GetxController {
     }
   }
 }
-

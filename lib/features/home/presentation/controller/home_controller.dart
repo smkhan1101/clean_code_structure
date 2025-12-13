@@ -100,14 +100,14 @@ class HomeController extends GetxController implements GetxService {
     } else if (_isTrainingEnabled) {
       menuItems.add(HomeMenu(
         title: 'continue_training'.tr,
-        description: 'pick_up_where_you_left_off'.tr,
+        description: 'Pick up where you left off'.tr,
         icon: Iconsax.arrow_right_3,
         iconColor: Get.theme.colorScheme.surface,
         selected: true,
       ));
     } else if (_baselineExists) {
       menuItems.add(HomeMenu(
-        title: 'start_training'.tr,
+        title: 'Start Training'.tr,
         description: _trainingDay,
         icon: Iconsax.arrow_right_3,
         iconColor: Get.theme.colorScheme.surface,

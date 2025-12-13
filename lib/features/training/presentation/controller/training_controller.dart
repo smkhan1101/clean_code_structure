@@ -80,6 +80,12 @@ class TrainingController extends GetxController implements GetxService {
   Timer? _timer;
   int _currentTime = 0;
   int get currentTime => _currentTime;
+  int _initialTimerSeconds = 0;
+
+  bool _showCountdown = false;
+  bool get showCountdown => _showCountdown;
+  int _countdownValue = 5;
+  int get countdownValue => _countdownValue;
 
   @override
   void onInit() {
@@ -143,16 +149,23 @@ class TrainingController extends GetxController implements GetxService {
 
   void startTimer(int seconds) {
     _currentTime = seconds;
+    _initialTimerSeconds = seconds;
+    _progress = 0.0;
     _showTimer = true;
     _showTrainingDetails = false;
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_currentTime > 0 && !_isPaused) {
         _currentTime--;
+        // Calculate progress: (elapsed / total) * 100
+        final elapsed = _initialTimerSeconds - _currentTime;
+        _progress = (elapsed / _initialTimerSeconds) * 100;
         update();
       } else if (_currentTime == 0) {
         timer.cancel();
+        _progress = 100.0;
         _showTimer = false;
+        _startCountdown();
         update();
       }
     });
@@ -162,6 +175,24 @@ class TrainingController extends GetxController implements GetxService {
   void pauseResume() {
     _isPaused = !_isPaused;
     _pauseValue = _currentTime;
+    update();
+  }
+
+  void _startCountdown() {
+    _showCountdown = true;
+    _countdownValue = 5;
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_countdownValue > 0) {
+        _countdownValue--;
+        update();
+      } else {
+        timer.cancel();
+        _showCountdown = false;
+        _showSwingSpeedInput = true;
+        update();
+      }
+    });
     update();
   }
 
@@ -282,4 +313,3 @@ class TrainingController extends GetxController implements GetxService {
     return null;
   }
 }
-

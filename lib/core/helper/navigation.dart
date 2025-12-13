@@ -2,13 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 Future<dynamic> launchScreen(Widget child, {bool pushAndRemove = false, bool replace = false}) async {
-  const Duration duration = Duration(seconds: 1);
+  const Duration duration = Duration(milliseconds: 300);
   if (pushAndRemove) {
-    return Get.offAll(() => child, duration: duration, routeName: routeName(child));
+    return Get.offAll(
+      () => child,
+      duration: duration,
+      routeName: routeName(child),
+      transition: Transition.cupertino,
+      curve: Curves.easeInOut,
+    );
   } else if (replace) {
-    return Get.off(() => child, duration: duration, routeName: routeName(child));
+    return Get.off(
+      () => child,
+      duration: duration,
+      routeName: routeName(child),
+      transition: Transition.cupertino,
+      curve: Curves.easeInOut,
+    );
   } else {
-    return Get.to(() => child, duration: duration, routeName: routeName(child));
+    return Get.to(
+      () => child,
+      duration: duration,
+      routeName: routeName(child),
+      transition: Transition.cupertino,
+      curve: Curves.easeInOut,
+    );
   }
 }
 

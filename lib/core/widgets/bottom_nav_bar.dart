@@ -46,8 +46,11 @@ class AppBottomNavBar extends StatelessWidget {
             label: 'Feed'.tr,
           ),
           BottomNavigationBarItem(
-            icon: _buildSvgIcon('assets/images/buttom nav/progress.svg', Colors.grey),
-            activeIcon: _buildSvgIcon('assets/images/buttom nav/progress.svg', const Color(0xFF4CAF50)),
+            icon: _buildSvgIcon('assets/images/buttom nav/progress1.svg', Colors.grey, size: 24.sp),
+            activeIcon: _buildSvgIcon(
+              'assets/images/buttom nav/progress1.svg',
+              const Color(0xFF4CAF50),
+            ),
             label: 'Progress'.tr,
           ),
           BottomNavigationBarItem(
@@ -65,11 +68,12 @@ class AppBottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildSvgIcon(String assetPath, Color color) {
+  Widget _buildSvgIcon(String assetPath, Color color, {double? size}) {
+    final iconSize = size ?? 20.sp;
     return SvgPicture.asset(
       assetPath,
-      width: 24.sp,
-      height: 24.sp,
+      width: iconSize,
+      height: iconSize,
       colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
       fit: BoxFit.contain,
     );

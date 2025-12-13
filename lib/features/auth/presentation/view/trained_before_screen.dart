@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:startup_repo/core/widgets/sign_in_button.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/auth_controller.dart';
 
@@ -63,37 +64,77 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
     required List<String> options,
     required Function(String) onSelected,
   }) {
-    showModalBottomSheet(
+    String currentValue = title == 'Current level' ? 'Level $selectedLevel' : 'Day $selectedDay';
+
+    showDialog(
       context: context,
-      backgroundColor: Colors.grey[900],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (context) => Container(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => Align(
+        alignment: Alignment.centerRight,
+        child: Padding(
+          padding: EdgeInsets.only(right: 25.w),
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: 130.w,
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 3,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.grey[850],
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (int index = 0; index < options.length; index++)
+                    GestureDetector(
+                      onTap: () {
+                        onSelected(options[index]);
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                        decoration: BoxDecoration(
+                          border: index == options.length - 1
+                              ? null
+                              : Border(
+                                  bottom: BorderSide(
+                                    color: Colors.grey[700]!,
+                                    width: 0.5,
+                                  ),
+                                ),
+                        ),
+                        child: Row(
+                          children: [
+                            if (options[index] == currentValue)
+                              Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20.sp,
+                              )
+                            else
+                              SizedBox(width: 20.sp),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  options[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-            SizedBox(height: 20.h),
-            ...options.map((option) => ListTile(
-                  title: Text(
-                    option,
-                    style: TextStyle(color: Colors.white, fontSize: 16.sp),
-                  ),
-                  onTap: () {
-                    onSelected(option);
-                    Navigator.pop(context);
-                  },
-                )),
-          ],
+          ),
         ),
       ),
     );
@@ -121,33 +162,33 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                             'Catch us up on',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 32.sp,
+                              fontSize: 30.sp,
                               fontWeight: FontWeight.bold,
-                              height: 1.2,
+                              height: 1,
                             ),
                           ),
-                          SizedBox(height: 8.h),
+                          SizedBox(height: 4.h),
                           Text(
                             'your training.',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 32.sp,
+                              fontSize: 30.sp,
                               fontWeight: FontWeight.bold,
-                              height: 1.2,
+                              height: 1,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 35.h),
                       Text(
                         'You will be able to pick up right from where you currently are in the training program. If you want to start training from the beginning, press Skip below.',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.sp,
-                          height: 1.5,
+                          height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 50.h),
+                      SizedBox(height: 25.h),
                       _buildFormField(
                         label: 'Current level',
                         child: GestureDetector(
@@ -182,7 +223,7 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 24.h),
                       _buildFormField(
                         label: 'Current day',
                         child: GestureDetector(
@@ -217,9 +258,9 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 24.h),
-                      Divider(color: Colors.grey[700], height: 32.h),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 14.h),
+                      Divider(color: Colors.grey[600], height: 14.h),
+                      SizedBox(height: 2.h),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -228,18 +269,25 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                             'Baseline measurements',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24.sp,
+                              fontSize: 22.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width: 12.w),
+                          SizedBox(width: 10.w),
                           GestureDetector(
                             onTap: () {},
                             child: Container(
-                              width: 30.w,
-                              height: 30.w,
+                              width: 24.w,
+                              height: 24.w,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF4CAF50),
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 43, 108, 46),
+                                    Color(0xFF4CAF50),
+                                  ],
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Center(
@@ -253,17 +301,26 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16.h),
+                      SizedBox(height: 8.h),
                       Text(
                         'If you did any baseline tests while training, input them here & we\'ll include them in your progress graphs and statistics.',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.sp,
-                          height: 1.5,
+                          height: 1.2,
                         ),
                       ),
-                      SizedBox(height: 24.h),
-                      Divider(color: Colors.grey[700], height: 32.h),
+                      SizedBox(height: 42.h),
+                      Center(
+                        child: Text(
+                          'None specified',
+                          style: TextStyle(
+                            color: Color(0xFF777576),
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -273,55 +330,29 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
               padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFF5CBF60),
-                          Color(0xFF4CAF50),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _onConfirm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
-                        minimumSize: Size(double.infinity, 56.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: Text(
-                        'Confirm',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                  SignInButton(
+                    onPressed: _onConfirm,
+                    text: 'Confirm',
+                    isValid: true,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    height: 65.h,
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 25.h),
                   Center(
                     child: GestureDetector(
                       onTap: _onSkip,
                       child: Text(
                         'Skip',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF777576),
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),

@@ -28,7 +28,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20.h),
+              SizedBox(height: 10.h),
               Text(
                 'Your progress',
                 style: TextStyle(
@@ -70,7 +70,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 });
               },
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8.sp),
+                padding: EdgeInsets.symmetric(vertical: 7.h),
                 decoration: BoxDecoration(
                   color: selectedSegment == 0 ? Colors.grey[700] : Colors.transparent,
                   borderRadius: BorderRadius.circular(6.r),
@@ -95,7 +95,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 });
               },
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8.sp),
+                padding: EdgeInsets.symmetric(vertical: 7.h),
                 decoration: BoxDecoration(
                   color: selectedSegment == 1 ? Colors.grey[700] : Colors.transparent,
                   borderRadius: BorderRadius.circular(6.r),
@@ -120,7 +120,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 });
               },
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 8.sp),
+                padding: EdgeInsets.symmetric(vertical: 7.h),
                 decoration: BoxDecoration(
                   color: selectedSegment == 2 ? Colors.grey[700] : Colors.transparent,
                   borderRadius: BorderRadius.circular(6.r),
