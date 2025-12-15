@@ -143,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
+                              cursorColor: const Color(0xFF4CAF50),
                               style: TextStyle(color: Colors.white, fontSize: 16.sp),
                               onChanged: (value) => controller.setEmail(value),
                               decoration: InputDecoration(
@@ -171,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 controller: passwordController,
                                 obscureText: obscurePassword.value,
                                 textInputAction: TextInputAction.done,
+                                cursorColor: const Color(0xFF4CAF50),
                                 style: TextStyle(color: Colors.white, fontSize: 16.sp),
                                 onChanged: (value) => controller.setPassword(value),
                                 onSubmitted: (_) {

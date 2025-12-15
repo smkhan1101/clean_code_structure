@@ -211,12 +211,26 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                                 style: TextStyle(color: Colors.white, fontSize: 18.sp),
                               ),
                               SizedBox(width: 8.w),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
+                              Stack(
+                                alignment: Alignment.center,
+                                clipBehavior: Clip.none,
                                 children: [
-                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 18.sp),
-                                  SizedBox(height: 2.h),
-                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 18.sp),
+                                  Transform.translate(
+                                    offset: Offset(0, -8.h),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_up,
+                                      color: Colors.white,
+                                      size: 16.sp,
+                                    ),
+                                  ),
+                                  Transform.translate(
+                                    offset: Offset(0, 4.h),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.white,
+                                      size: 16.sp,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -246,12 +260,26 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                                 style: TextStyle(color: Colors.white, fontSize: 18.sp),
                               ),
                               SizedBox(width: 8.w),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
+                              Stack(
+                                alignment: Alignment.center,
+                                clipBehavior: Clip.none,
                                 children: [
-                                  Icon(Icons.keyboard_arrow_up, color: Colors.white, size: 18.sp),
-                                  SizedBox(height: 2.h),
-                                  Icon(Icons.keyboard_arrow_down, color: Colors.white, size: 18.sp),
+                                  Transform.translate(
+                                    offset: Offset(0, -2.h),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_up,
+                                      color: Colors.white,
+                                      size: 16.sp,
+                                    ),
+                                  ),
+                                  Transform.translate(
+                                    offset: Offset(0, 4.h),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.white,
+                                      size: 16.sp,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
