@@ -136,12 +136,12 @@ class AuthController extends GetxController implements GetxService {
 
   Future<void> register() async {
     if (!isValidEmail(_email)) {
-      _showErrorDialog('Signup Error', 'Please enter a valid email address');
+      _showErrorDialog('Could not complete sign up', 'Please enter a valid email address');
       return;
     }
 
     if (_password.isEmpty || _password.length < 6) {
-      _showErrorDialog('Signup Error', 'Password must be at least 6 characters');
+      _showErrorDialog('Could not complete sign up', 'Password must be 6 characters or long.');
       return;
     }
 
@@ -168,11 +168,15 @@ class AuthController extends GetxController implements GetxService {
         update();
         Get.offAllNamed('/home');
       } else {
-        _showErrorDialog('Signup Error', 'Registration failed. Please try again.');
+        _showErrorDialog('Could not complete sign up', 'Registration failed. Please try again.');
       }
     } catch (e) {
       _isLoading = false;
-      _showErrorDialog('Signup Error', e.toString());
+      String errorMessage = e.toString();
+      if (errorMessage.contains('email') && errorMessage.contains('already in use')) {
+        errorMessage = 'The email address is already in use by another account.';
+      }
+      _showErrorDialog('Could not complete sign up', errorMessage);
     }
   }
 
@@ -237,4 +241,3 @@ class AuthController extends GetxController implements GetxService {
     Get.offAllNamed('/get-started');
   }
 }
-
