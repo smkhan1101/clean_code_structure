@@ -3,6 +3,7 @@ import 'package:startup_repo/imports.dart';
 import '../controller/home_controller.dart';
 import '../../data/model/home_menu.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
+import '../../../../core/widgets/training_calendar_slider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -61,23 +62,13 @@ class HomeScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             height: 200.h,
-            decoration: BoxDecoration(
-              color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: YoutubePlayer(
-                controller: youtubeController,
-                showVideoProgressIndicator: true,
-                progressIndicatorColor: const Color(0xFF4CAF50),
-                progressColors: const ProgressBarColors(
-                  playedColor: Color(0xFF4CAF50),
-                  handleColor: Color(0xFF4CAF50),
-                ),
-              ),
+            child: PageView(
+              children: [
+                _buildVideoCard(youtubeController),
+                _buildTrainingCalendarCard(controller),
+              ],
             ),
           ),
           SizedBox(height: 16.h),
@@ -87,6 +78,35 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildVideoCard(YoutubePlayerController youtubeController) {
+    return Container(
+      height: 200.h,
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: YoutubePlayer(
+          controller: youtubeController,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: const Color(0xFF4CAF50),
+          progressColors: const ProgressBarColors(
+            playedColor: Color(0xFF4CAF50),
+            handleColor: Color(0xFF4CAF50),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrainingCalendarCard(HomeController controller) {
+    return TrainingCalendarSlider(
+      height: 200.h,
+      width: double.infinity,
     );
   }
 
