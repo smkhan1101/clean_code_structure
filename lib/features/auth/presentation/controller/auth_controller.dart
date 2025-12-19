@@ -42,9 +42,15 @@ class AuthController extends GetxController implements GetxService {
   String _shaftLength = 'None';
   String _preferredUnit = 'Yards/MPH';
   bool _isTrainedBefore = false;
+  bool get isTrainedBefore => _isTrainedBefore;
   int _currentLevel = 1;
+  int get currentLevel => _currentLevel;
   int _currentDay = 1;
+  int get currentDay => _currentDay;
   bool _isSkipped = false;
+  bool get isSkipped => _isSkipped;
+  bool _hasBaselineMeasurements = false;
+  bool get hasBaselineMeasurements => _hasBaselineMeasurements;
   bool _notificationPermissionGranted = false;
 
   void setSignupDetails({
@@ -74,10 +80,17 @@ class AuthController extends GetxController implements GetxService {
     required int currentLevel,
     required int currentDay,
     required bool isSkipped,
+    bool hasBaselineMeasurements = false,
   }) {
     _currentLevel = currentLevel;
     _currentDay = currentDay;
     _isSkipped = isSkipped;
+    _hasBaselineMeasurements = hasBaselineMeasurements;
+    update();
+  }
+
+  void setHasBaselineMeasurements(bool hasMeasurements) {
+    _hasBaselineMeasurements = hasMeasurements;
     update();
   }
 

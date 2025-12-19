@@ -55,6 +55,7 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
       currentLevel: selectedLevel,
       currentDay: selectedDay,
       isSkipped: false,
+      hasBaselineMeasurements: _baselineMeasurements.isNotEmpty,
     );
     Get.toNamed('/notification-permission');
   }
@@ -609,6 +610,7 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
                                   date: _selectedDate!,
                                 ),
                               );
+                              controller.setHasBaselineMeasurements(true);
                             });
                             Navigator.pop(context);
                           }
@@ -666,6 +668,7 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
             onTap: () {
               setState(() {
                 _baselineMeasurements.remove(measurement);
+                controller.setHasBaselineMeasurements(_baselineMeasurements.isNotEmpty);
               });
             },
             child: Icon(

@@ -5,6 +5,7 @@ import '../../data/model/home_menu.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 import '../../../../core/widgets/training_calendar_slider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../../../auth/presentation/controller/auth_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,24 +15,28 @@ class HomeScreen extends StatelessWidget {
     return GetBuilder<HomeController>(
       init: Get.find<HomeController>(),
       builder: (controller) {
-        return Scaffold(
-          backgroundColor: Colors.black,
-          bottomNavigationBar: _buildBottomNavBar(context),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  _buildLogo(),
-                  SizedBox(height: 24.h),
-                  _buildVideoPlayer(controller, context),
-                  SizedBox(height: 24.h),
-                  _buildMenuList(controller, context),
-                  SizedBox(height: 20.h),
-                ],
+        return GetBuilder<AuthController>(
+          builder: (authController) {
+            return Scaffold(
+              backgroundColor: Colors.black,
+              bottomNavigationBar: _buildBottomNavBar(context),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20.h),
+                      _buildLogo(),
+                      SizedBox(height: 24.h),
+                      _buildVideoPlayer(controller, context),
+                      SizedBox(height: 24.h),
+                      _buildMenuList(controller, context),
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -58,18 +63,32 @@ class HomeScreen extends StatelessWidget {
       ),
     );
 
+    final authController = Get.find<AuthController>();
+    final shouldShowSlider =
+        authController.isTrainedBefore && !authController.isSkipped && authController.hasBaselineMeasurements;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
           SizedBox(
             height: 200.h,
-            child: PageView(
-              children: [
-                _buildVideoCard(youtubeController),
-                _buildTrainingCalendarCard(controller),
-              ],
-            ),
+            child: shouldShowSlider
+                ? PageView(
+                    physics: const BouncingScrollPhysics(),
+                    padEnds: false,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: _buildTrainingCalendarCard(controller),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.w),
+                        child: _buildVideoCard(youtubeController),
+                      ),
+                    ],
+                  )
+                : _buildVideoCard(youtubeController),
           ),
           SizedBox(height: 16.h),
           Container(
