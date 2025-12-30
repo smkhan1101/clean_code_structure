@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../imports.dart';
 import '../../data/model/exercise_data.dart';
 import '../../domain/service/training_service.dart';
+import '../../../home/presentation/controller/home_controller.dart';
 
 class TrainingController extends GetxController implements GetxService {
   final TrainingService trainingService;
@@ -77,6 +78,12 @@ class TrainingController extends GetxController implements GetxService {
   int _currentDay = 1;
   int get currentDay => _currentDay;
 
+  String? _protocolVideoId;
+  String? get protocolVideoId => _protocolVideoId;
+
+  bool _isChangingTimeline = false;
+  bool get isChangingTimeline => _isChangingTimeline;
+
   Timer? _timer;
   int _currentTime = 0;
   int get currentTime => _currentTime;
@@ -110,8 +117,31 @@ class TrainingController extends GetxController implements GetxService {
       _speedUnit = baselineData['speedUnit'] ?? 'MPH';
       _distanceUnit = baselineData['distanceUnit'] ?? 'YDS';
 
+      final homeController = Get.find<HomeController>();
+      _currentLevel = homeController.currentLevel;
+      _currentDay = homeController.currentDay;
+
       if (_baselineExists) {
-        _trainingExercises = await trainingService.getTrainingExercises(_currentLevel, _currentDay);
+        final protocolData = await trainingService.getProtocolData(_currentLevel, _currentDay);
+        // Get unique exercises from actions for "Coming up" display
+        final actions = protocolData['actions'] as List<dynamic>? ?? [];
+        final uniqueExercises = <String, ExerciseData>{};
+        
+        for (final action in actions) {
+          final exerciseData = action['exercise'] as Map<String, dynamic>?;
+          if (exerciseData != null) {
+            final exercise = ExerciseData.fromJson(exerciseData);
+            final exerciseKey = exercise.exerciseName.isNotEmpty 
+                ? exercise.exerciseName 
+                : exercise.heading;
+            if (exerciseKey.isNotEmpty && !uniqueExercises.containsKey(exerciseKey)) {
+              uniqueExercises[exerciseKey] = exercise;
+            }
+          }
+        }
+        
+        _trainingExercises = uniqueExercises.values.toList();
+        _protocolVideoId = protocolData['videoId'];
       } else {
         _trainingExercises = await trainingService.getBaselineExercises();
       }
@@ -124,6 +154,25 @@ class TrainingController extends GetxController implements GetxService {
     }
 
     _isLoading = false;
+    update();
+  }
+
+  Future<void> changeTimeline(int level, int day) async {
+    _isChangingTimeline = true;
+    update();
+
+    try {
+      _currentLevel = level;
+      _currentDay = day;
+      final protocolData = await trainingService.getProtocolData(level, day);
+      _trainingExercises = protocolData['exercises'] ?? [];
+      _protocolVideoId = protocolData['videoId'];
+      await trainingService.updateTimeline(level, day);
+    } catch (e) {
+      showToast('error_changing_timeline'.tr);
+    }
+
+    _isChangingTimeline = false;
     update();
   }
 

@@ -1,16 +1,18 @@
 class ExerciseData {
-  final String exerciseName;
+  String exerciseName;
   final String heading;
-  final String videoId;
+  String videoId;
   final String dominantStr;
   final String weightStr;
-  final bool dominant;
+  bool dominant;
   final bool isStart;
-  final int weight;
-  final int time;
+  int weight;
+  int time;
+  int count;
+  int? durationSeconds;
   final bool isBaseline;
-  final bool allowDriver;
-  final bool requiresInput;
+  bool allowDriver;
+  bool requiresInput;
 
   ExerciseData({
     this.exerciseName = '',
@@ -22,6 +24,8 @@ class ExerciseData {
     this.isStart = false,
     this.weight = 0,
     this.time = 0,
+    this.count = 5,
+    this.durationSeconds,
     this.isBaseline = false,
     this.allowDriver = false,
     this.requiresInput = false,
@@ -29,8 +33,8 @@ class ExerciseData {
 
   factory ExerciseData.fromJson(Map<String, dynamic> json) {
     return ExerciseData(
-      exerciseName: json['exerciseName'] ?? '',
-      heading: json['heading'] ?? '',
+      exerciseName: json['title'] ?? json['exerciseName'] ?? '',
+      heading: json['heading'] ?? json['title'] ?? '',
       videoId: json['videoId'] ?? '',
       dominantStr: json['dominantStr'] ?? '',
       weightStr: json['weightStr'] ?? '',
@@ -38,11 +42,15 @@ class ExerciseData {
       isStart: json['isStart'] ?? false,
       weight: json['weight'] ?? 0,
       time: json['time'] ?? 0,
+      count: json['count'] ?? 5,
+      durationSeconds: json['durationSeconds'] as int?,
       isBaseline: json['isBaseline'] ?? false,
       allowDriver: json['allowDriver'] ?? false,
       requiresInput: json['requiresInput'] ?? false,
     );
   }
+
+  String get title => exerciseName.isNotEmpty ? exerciseName : heading;
 
   Map<String, dynamic> toJson() {
     return {
@@ -55,6 +63,8 @@ class ExerciseData {
       'isStart': isStart,
       'weight': weight,
       'time': time,
+      'count': count,
+      'durationSeconds': durationSeconds,
       'isBaseline': isBaseline,
       'allowDriver': allowDriver,
       'requiresInput': requiresInput,

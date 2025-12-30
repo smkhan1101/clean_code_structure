@@ -13,12 +13,15 @@ abstract class AuthRepo {
     required String lastName,
     required DateTime dateOfBirth,
     required String gender,
-    required String handType,
+    required String handedness,
     required String handicap,
-    required String shaftLength,
-    required String preferredUnit,
+    required String shaft,
+    required String units,
     required int currentLevel,
     required int currentDay,
+    DateTime? lastRewardsUpdate,
+    String? fcmToken,
+    List<Map<String, dynamic>>? baselineInputs,
   });
 }
 

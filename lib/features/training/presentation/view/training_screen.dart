@@ -2,7 +2,7 @@ import 'package:startup_repo/imports.dart';
 import '../controller/training_controller.dart';
 import '../../../../core/widgets/loading.dart';
 import '../../../../core/widgets/sign_in_button.dart';
-import 'training_details_screen.dart';
+import 'training_active_screen.dart';
 
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -123,6 +123,367 @@ class _TrainingScreenState extends State<TrainingScreen> {
   }
 
   Widget _buildStartView(TrainingController controller, BuildContext context) {
+    if (controller.baselineExists) {
+      return _buildTrainingView(controller, context);
+    } else {
+      return _buildBaselineView(controller, context);
+    }
+  }
+
+  Widget _buildTrainingView(TrainingController controller, BuildContext context) {
+    return Column(
+      children: [
+        _buildTrainingHeader(controller, context),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30.h),
+                if (controller.protocolVideoId != null) _buildTutorialView(controller),
+                SizedBox(height: 30.h),
+                _buildComingUpView(controller),
+                SizedBox(height: 30.h),
+                _buildTimeToCompleteView(),
+                SizedBox(height: 30.h),
+                _buildRadarSelectionView(controller),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+        ),
+        _buildTrainingFooter(controller),
+      ],
+    );
+  }
+
+  Widget _buildTrainingHeader(TrainingController controller, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 20.sp),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Level ${controller.currentLevel}, Day ${controller.currentDay}',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          _buildChangeDayButton(controller),
+          SizedBox(width: 10.w),
+          IconButton(
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            icon: Container(
+              width: 35.w,
+              height: 35.w,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF237537),
+                    Color(0xFF33C258),
+                  ],
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 24.sp,
+              ),
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChangeDayButton(TrainingController controller) {
+    if (controller.isChangingTimeline) {
+      return const SizedBox(
+        width: 36,
+        height: 36,
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 2,
+          ),
+        ),
+      );
+    }
+
+    return PopupMenuButton<String>(
+      icon: Container(
+        width: 36.w,
+        height: 36.w,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.16),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.swap_horiz,
+          color: Colors.white,
+          size: 16.sp,
+        ),
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: Text('Level ${controller.currentLevel}'),
+          enabled: false,
+        ),
+        ...List.generate(5, (index) {
+          final level = index + 1;
+          return PopupMenuItem(
+            value: 'level_$level',
+            child: Text('Level $level'),
+            onTap: () {
+              Future.delayed(Duration.zero, () {
+                controller.changeTimeline(level, 1);
+              });
+            },
+          );
+        }),
+        const PopupMenuDivider(),
+        PopupMenuItem(
+          child: Text('Day ${controller.currentDay}'),
+          enabled: false,
+        ),
+        ...List.generate(30, (index) {
+          final day = index + 1;
+          return PopupMenuItem(
+            value: 'day_$day',
+            child: Text('Day $day'),
+            onTap: () {
+              Future.delayed(Duration.zero, () {
+                controller.changeTimeline(controller.currentLevel, day);
+              });
+            },
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildTutorialView(TrainingController controller) {
+    final videoId = controller.protocolVideoId;
+    if (videoId == null || videoId.isEmpty) {
+      return Container(
+        height: 200.h,
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Center(
+          child: Text(
+            'No video available',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 14.sp,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final youtubeController = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+
+    return Container(
+      height: 200.h,
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.r),
+        child: YoutubePlayer(
+          controller: youtubeController,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: const Color(0xFF4CAF50),
+          progressColors: const ProgressBarColors(
+            playedColor: Color(0xFF4CAF50),
+            handleColor: Color(0xFF4CAF50),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComingUpView(TrainingController controller) {
+    if (controller.trainingExercises.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Coming up',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15.h),
+        ...controller.trainingExercises.map((exercise) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: Text(
+              exercise.title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17.sp,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildTimeToCompleteView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Time to complete',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15.h),
+        Text(
+          'Around 15 minutes.',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 17.sp,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadarSelectionView(TrainingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Radar',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15.h),
+        Container(
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.bluetooth,
+                color: Colors.grey[400],
+                size: 20.sp,
+              ),
+              SizedBox(width: 10.w),
+              Text(
+                'Not connected',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 16.sp,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTrainingFooter(TrainingController controller) {
+    return Padding(
+      padding: EdgeInsets.all(15.w),
+      child: Column(
+        children: [
+          Divider(color: Colors.grey[600], thickness: 1),
+          SizedBox(height: 30.h),
+          _buildWarmUpCheck(context),
+          SizedBox(height: 16.h),
+          _buildSlideToStartButton(controller, _hasWarmedUp, context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWarmUpCheck(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 24.w,
+          height: 24.w,
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFF4CAF50), width: 2),
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          child: Checkbox(
+            value: _hasWarmedUp,
+            onChanged: (value) {
+              setState(() {
+                _hasWarmedUp = value ?? false;
+              });
+            },
+            activeColor: const Color(0xFF4CAF50),
+            checkColor: Colors.white,
+            side: BorderSide.none,
+          ),
+        ),
+        SizedBox(width: 18.w),
+        Text(
+          'I have warmed up',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15.sp,
+          ),
+        ),
+        SizedBox(width: 16.w),
+        GestureDetector(
+          onTap: () {
+            _showWarmUpScreen(context);
+          },
+          child: Text(
+            'See video',
+            style: TextStyle(
+              color: const Color(0xFF4CAF50),
+              fontSize: 15.sp,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBaselineView(TrainingController controller, BuildContext context) {
     return Column(
       children: [
         Padding(
@@ -152,8 +513,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color.fromARGB(255, 33, 224, 84),
-                        Color.fromARGB(255, 13, 89, 32),
+                        Color(0xFF237537),
+                        Color(0xFF33C258),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -287,7 +648,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
                       ],
                     ),
                     SizedBox(height: 16.h),
-                    _buildSlideToStartButton(controller, _hasWarmedUp),
+                    _buildSlideToStartButton(controller, _hasWarmedUp, context),
                     SizedBox(height: 8.h),
                     Center(
                       child: GestureDetector(
@@ -369,51 +730,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
     );
   }
 
-  Widget _buildSlideToStartButton(TrainingController controller, bool isEnabled) {
+  Widget _buildSlideToStartButton(TrainingController controller, bool isEnabled, BuildContext context) {
     return _SlideToStartButton(
       enabled: isEnabled,
       onSlideComplete: () {
-        controller.startTraining();
-        TrainingDetailsScreen.show();
+        Navigator.pop(context);
+        TrainingActiveScreen.show();
       },
-    );
-  }
-
-  Widget _buildTrainingVideoPlayer() {
-    if (_trainingVideoController == null) {
-      return Container(
-        height: 200.h,
-        decoration: BoxDecoration(
-          color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Center(
-          child: const CircularProgressIndicator(
-            color: Colors.green,
-            strokeWidth: 3.0,
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      height: 200.h,
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
-        child: YoutubePlayer(
-          controller: _trainingVideoController!,
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: const Color(0xFF4CAF50),
-          progressColors: const ProgressBarColors(
-            playedColor: Color(0xFF4CAF50),
-            handleColor: Color(0xFF4CAF50),
-          ),
-        ),
-      ),
     );
   }
 
@@ -770,24 +1093,28 @@ class _SlideToStartButtonState extends State<_SlideToStartButton> {
                 top: 0,
                 bottom: 0,
                 child: GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    if (!_isCompleted && widget.enabled) {
-                      setState(() {
-                        _dragPosition = (_dragPosition + details.delta.dx).clamp(0.0, maxDrag);
-                        if (_dragPosition >= maxDrag - 5) {
-                          _isCompleted = true;
-                          widget.onSlideComplete();
+                  onHorizontalDragUpdate: widget.enabled
+                      ? (details) {
+                          if (!_isCompleted) {
+                            setState(() {
+                              _dragPosition = (_dragPosition + details.delta.dx).clamp(0.0, maxDrag);
+                              if (_dragPosition >= maxDrag - 5) {
+                                _isCompleted = true;
+                                widget.onSlideComplete();
+                              }
+                            });
+                          }
                         }
-                      });
-                    }
-                  },
-                  onHorizontalDragEnd: (details) {
-                    if (!_isCompleted) {
-                      setState(() {
-                        _dragPosition = 0.0;
-                      });
-                    }
-                  },
+                      : null,
+                  onHorizontalDragEnd: widget.enabled
+                      ? (details) {
+                          if (!_isCompleted) {
+                            setState(() {
+                              _dragPosition = 0.0;
+                            });
+                          }
+                        }
+                      : null,
                   child: Container(
                     width: 70.w,
                     height: 70.w,

@@ -51,12 +51,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDZ0XjoO-uTr_PcNDeHJ0slRAhocHqPFJY',
-    appId: '1:696081141609:ios:bfce1f52f357a80cbe37f8',
-    messagingSenderId: '696081141609',
-    projectId: 'blueconnect-2187e',
-    storageBucket: 'blueconnect-2187e.firebasestorage.app',
-    iosBundleId: 'com.xflow.blueconnect',
+    apiKey: 'AIzaSyB9GNC7nkcHFB1roO-r-_9YI1Hi0ADCSMo',
+    appId: '1:902874816476:ios:41455a7e46cea8751df919',
+    messagingSenderId: '902874816476',
+    projectId: 'rypstick-new',
+    storageBucket: 'rypstick-new.firebasestorage.app',
+    iosBundleId: 'com.rypstick.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

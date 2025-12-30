@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import '../../data/model/user_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../domain/service/auth_service.dart';
+import '../../../settings/presentation/controller/settings_controller.dart';
 
 class AuthController extends GetxController implements GetxService {
   final AuthService authService;
@@ -52,6 +53,8 @@ class AuthController extends GetxController implements GetxService {
   bool _hasBaselineMeasurements = false;
   bool get hasBaselineMeasurements => _hasBaselineMeasurements;
   bool _notificationPermissionGranted = false;
+  List<Map<String, dynamic>> _baselineInputs = [];
+  List<Map<String, dynamic>> get baselineInputs => _baselineInputs;
 
   void setSignupDetails({
     required String firstName,
@@ -91,6 +94,11 @@ class AuthController extends GetxController implements GetxService {
 
   void setHasBaselineMeasurements(bool hasMeasurements) {
     _hasBaselineMeasurements = hasMeasurements;
+    update();
+  }
+
+  void setBaselineInputs(List<Map<String, dynamic>> inputs) {
+    _baselineInputs = inputs;
     update();
   }
 
@@ -164,16 +172,29 @@ class AuthController extends GetxController implements GetxService {
     try {
       final user = await authService.register(_email, _password);
       if (user != null) {
+        String? fcmToken;
+        try {
+          final messaging = FirebaseMessaging.instance;
+          fcmToken = await messaging.getToken();
+        } catch (e) {
+        }
+        List<Map<String, dynamic>>? baselineInputs;
+        if (_baselineInputs.isNotEmpty) {
+          baselineInputs = _baselineInputs;
+        }
         await authService.saveUserDetails(
           userId: user.id,
           firstName: _firstName,
           lastName: _lastName,
           dateOfBirth: _dateOfBirth!,
           gender: _gender,
-          handType: _handType,
+          handedness: _handType,
           handicap: _handicap,
-          shaftLength: _shaftLength,
-          preferredUnit: _preferredUnit,
+          shaft: _shaftLength,
+          units: _preferredUnit,
+          lastRewardsUpdate: null,
+          fcmToken: fcmToken,
+          baselineInputs: baselineInputs,
           currentLevel: _isTrainedBefore && !_isSkipped ? _currentLevel : 1,
           currentDay: _isTrainedBefore && !_isSkipped ? _currentDay : 1,
         );
@@ -251,6 +272,41 @@ class AuthController extends GetxController implements GetxService {
 
   Future<void> logout() async {
     await authService.logout();
+    _clearState();
+    if (Get.isRegistered<SettingsController>()) {
+      try {
+        final settingsController = Get.find<SettingsController>();
+        settingsController.clearState();
+      } catch (e) {
+      }
+    }
     Get.offAllNamed('/get-started');
+  }
+
+  void _clearState() {
+    _email = '';
+    _password = '';
+    _resetEmail = '';
+    _errorMessage = '';
+    _errorTitle = '';
+    _showError = false;
+    _isSuccess = false;
+    _firstName = '';
+    _lastName = '';
+    _dateOfBirth = null;
+    _gender = 'None';
+    _handType = 'Right-handed';
+    _handicap = '10';
+    _shaftLength = 'None';
+    _preferredUnit = 'Yards/MPH';
+    _isTrainedBefore = false;
+    _currentLevel = 1;
+    _currentDay = 1;
+    _isSkipped = false;
+    _hasBaselineMeasurements = false;
+    _notificationPermissionGranted = false;
+    _baselineInputs = [];
+    _isLoading = false;
+    update();
   }
 }

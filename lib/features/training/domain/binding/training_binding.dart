@@ -4,6 +4,10 @@ import '../../data/repository/training_repo_interface.dart';
 import '../service/training_service.dart';
 import '../service/training_service_impl.dart';
 import '../../presentation/controller/training_controller.dart';
+import '../../presentation/controller/training_active_controller.dart';
+import '../../presentation/controller/measure_baseline_active_controller.dart';
+import '../../presentation/controller/alternative_baseline_input_controller.dart';
+import '../../presentation/controller/swing_sheet_controller.dart';
 
 class TrainingBinding extends Bindings {
   @override
@@ -11,6 +15,10 @@ class TrainingBinding extends Bindings {
     Get.lazyPut<TrainingRepo>(() => TrainingRepoImpl());
     Get.lazyPut<TrainingService>(() => TrainingServiceImpl(trainingRepo: Get.find<TrainingRepo>()));
     Get.lazyPut<TrainingController>(() => TrainingController(trainingService: Get.find<TrainingService>()));
+    Get.lazyPut<TrainingActiveController>(() => TrainingActiveController(trainingService: Get.find<TrainingService>()));
+    Get.lazyPut<MeasureBaselineActiveController>(() => MeasureBaselineActiveController(trainingService: Get.find<TrainingService>()));
+    Get.lazyPut<AlternativeBaselineInputController>(() => AlternativeBaselineInputController(trainingService: Get.find<TrainingService>()));
+    Get.lazyPut<SwingSheetController>(() => SwingSheetController());
   }
 }
 

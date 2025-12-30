@@ -1,7 +1,6 @@
 import 'package:startup_repo/imports.dart';
 import '../controller/settings_controller.dart';
 import '../../../../core/widgets/confirmation_dialog.dart';
-import '../../../../core/widgets/loading.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -9,12 +8,11 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SettingsController>();
+    controller.checkAndReloadIfUserChanged();
     return GetBuilder<SettingsController>(
-      init: Get.find<SettingsController>(),
+      init: controller,
       builder: (controller) {
-        if (controller.isLoading) {
-          return Scaffold(body: Center(child: Loading()));
-        }
 
         return Scaffold(
           backgroundColor: Colors.black,

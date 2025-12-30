@@ -35,15 +35,41 @@ class SettingsController extends GetxController implements GetxService {
   bool _isNotDay1 = false;
   bool get isNotDay1 => _isNotDay1;
 
+  String? _lastUserId;
+
   @override
   void onInit() {
     super.onInit();
     loadSettings();
   }
 
-  Future<void> loadSettings() async {
-    _isLoading = true;
-    update();
+  @override
+  void onReady() {
+    super.onReady();
+    checkAndReloadIfUserChanged();
+  }
+
+  void checkAndReloadIfUserChanged() {
+    final currentUser = AuthController.find.authService.getCurrentUser();
+    final currentUserId = currentUser?.id;
+    if (currentUserId != null && currentUserId != _lastUserId) {
+      loadSettings();
+    } else if (currentUserId == null && _lastUserId != null) {
+      _clearState();
+    }
+  }
+
+  Future<void> loadSettings({bool showLoading = false}) async {
+    final currentUser = AuthController.find.authService.getCurrentUser();
+    if (currentUser == null) {
+      clearState();
+      return;
+    }
+    _lastUserId = currentUser.id;
+    if (showLoading) {
+      _isLoading = true;
+      update();
+    }
 
     try {
       final settings = await settingsService.getUserSettings();
@@ -54,11 +80,32 @@ class SettingsController extends GetxController implements GetxService {
       _shaft = settings['shaft'] ?? 'None';
       _isNotDay1 = settings['isNotDay1'] ?? false;
     } catch (e) {
-      showToast('error_loading_settings'.tr);
+      if (showLoading) {
+        showToast('error_loading_settings'.tr);
+      }
     }
 
+    if (showLoading) {
+      _isLoading = false;
+    }
+    update();
+  }
+
+  void clearState() {
+    _email = '';
+    _notifications = 'Allow';
+    _radar = 'No radar';
+    _unit = 'Yards/MPH';
+    _shaft = 'None';
+    _isNotDay1 = false;
+    _isProPlan = false;
+    _lastUserId = null;
     _isLoading = false;
     update();
+  }
+
+  void _clearState() {
+    clearState();
   }
 
   void setIsProPlan(bool value) {

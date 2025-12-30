@@ -13,6 +13,7 @@ import '../../features/training/domain/binding/training_binding.dart';
 import '../../features/rewards/domain/binding/rewards_binding.dart';
 import '../../features/settings/domain/binding/settings_binding.dart';
 import '../../features/paywall/domain/binding/paywall_binding.dart';
+import '../../features/tutorials/domain/binding/tutorials_binding.dart';
 import '../api/api_client_impl.dart';
 import '../api/api_client.dart';
 import '../../features/language/data/model/language.dart';
@@ -35,6 +36,7 @@ Future<Map<String, Map<String, String>>> init() async {
     RewardsBinding(),
     SettingsBinding(),
     PaywallBinding(),
+    TutorialsBinding(),
   ];
 
   for (Bindings binding in bindings) {

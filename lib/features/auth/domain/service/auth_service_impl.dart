@@ -44,12 +44,15 @@ class AuthServiceImpl implements AuthService {
     required String lastName,
     required DateTime dateOfBirth,
     required String gender,
-    required String handType,
+    required String handedness,
     required String handicap,
-    required String shaftLength,
-    required String preferredUnit,
+    required String shaft,
+    required String units,
     required int currentLevel,
     required int currentDay,
+    DateTime? lastRewardsUpdate,
+    String? fcmToken,
+    List<Map<String, dynamic>>? baselineInputs,
   }) async {
     await authRepo.saveUserDetails(
       userId: userId,
@@ -57,12 +60,15 @@ class AuthServiceImpl implements AuthService {
       lastName: lastName,
       dateOfBirth: dateOfBirth,
       gender: gender,
-      handType: handType,
+      handedness: handedness,
       handicap: handicap,
-      shaftLength: shaftLength,
-      preferredUnit: preferredUnit,
+      shaft: shaft,
+      units: units,
       currentLevel: currentLevel,
       currentDay: currentDay,
+      lastRewardsUpdate: lastRewardsUpdate,
+      fcmToken: fcmToken,
+      baselineInputs: baselineInputs,
     );
   }
 }

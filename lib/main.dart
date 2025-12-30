@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
               title: AppConstants.appName,
               debugShowCheckedModeBanner: false,
               themeMode: themeController.themeMode,
+
               theme: light,
               darkTheme: dark,
               locale: localizeController.locale,
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
                   name: '/get-started',
                   page: () => const GetStartedScreen(),
                   transition: Transition.cupertino,
-                  transitionDuration: const Duration(milliseconds: 300),
+                  transitionDuration: const Duration(milliseconds: 600),
                   curve: Curves.easeInOut,
                 ),
                 GetPage(

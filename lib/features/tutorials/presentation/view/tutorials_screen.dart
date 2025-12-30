@@ -1,7 +1,10 @@
 import 'package:startup_repo/imports.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../controller/tutorials_controller.dart';
+import '../../data/model/exercise.dart';
+import '../../data/model/swing_fix.dart';
 
-class TutorialsScreen extends StatefulWidget {
+class TutorialsScreen extends StatelessWidget {
   const TutorialsScreen({super.key});
 
   static void show() {
@@ -15,193 +18,98 @@ class TutorialsScreen extends StatefulWidget {
   }
 
   @override
-  State<TutorialsScreen> createState() => _TutorialsScreenState();
-}
-
-class _TutorialsScreenState extends State<TutorialsScreen> {
-  int selectedMain = 0;
-  int selectedLevel = 0;
-  Set<int> expandedItems = {};
-
-  final Map<String, String> videoIds = {
-    'Warm-Up': 'IF0kLstvX6M',
-    'Freezers': 'IF0kLstvX6M',
-    'Lead Heel Lift': 'IF0kLstvX6M',
-    'Baseline Test: Normal Swings': 'IF0kLstvX6M',
-    'Casting': 'IF0kLstvX6M',
-    'Chicken Wing': 'IF0kLstvX6M',
-    'Early Extension': 'IF0kLstvX6M',
-    'Flat Shoulder': 'IF0kLstvX6M',
-    'Grounded': 'IF0kLstvX6M',
-    'Harpooner': 'IF0kLstvX6M',
-    'Slicer': 'IF0kLstvX6M',
-  };
-
-  @override
   Widget build(BuildContext context) {
-    final tutorialItems = selectedMain == 0
-        ? ['Warm-Up', 'Freezers', 'Lead Heel Lift', 'Baseline Test: Normal Swings']
-        : ['Casting', 'Chicken Wing', 'Early Extension', 'Flat Shoulder', 'Grounded', 'Harpooner', 'Slicer'];
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.93,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    'Tutorials',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    icon: Container(
-                      width: 30.w,
-                      height: 30.w,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.fromARGB(255, 33, 224, 84),
-                            Color.fromARGB(255, 13, 89, 32),
-                          ],
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 24.sp,
-                      ),
-                    ),
-                    onPressed: () => Get.back(),
-                  ),
-                ),
-              ],
-            ),
+    return GetBuilder<TutorialsController>(
+      init: TutorialsController.find,
+      builder: (controller) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.93,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
           ),
-          SizedBox(height: 4.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.sp),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(8.sp),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedMain = 0;
-                          selectedLevel = 0;
-                          expandedItems.clear();
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7.sp),
-                        decoration: BoxDecoration(
-                          color: selectedMain == 0 ? Colors.grey[700] : Colors.transparent,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8.sp),
-                            bottomLeft: Radius.circular(8.sp),
-                            topRight: selectedMain == 0 ? Radius.circular(8.sp) : Radius.zero,
-                            bottomRight: selectedMain == 0 ? Radius.circular(8.sp) : Radius.zero,
-                          ),
-                        ),
-                        child: Text(
-                          'Training protocols',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Tutorials',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedMain = 1;
-                          expandedItems.clear();
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7.sp),
-                        decoration: BoxDecoration(
-                          color: selectedMain == 1 ? Colors.grey[700] : Colors.transparent,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(6.sp),
-                            bottomRight: Radius.circular(6.sp),
-                            topLeft: selectedMain == 1 ? Radius.circular(6.sp) : Radius.zero,
-                            bottomLeft: selectedMain == 1 ? Radius.circular(6.sp) : Radius.zero,
-                          ),
-                        ),
-                        child: Text(
-                          'Swing fix videos',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (selectedMain == 0) ...[
-            SizedBox(height: 16.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.sp),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[900],
-                  borderRadius: BorderRadius.circular(8.sp),
-                ),
-                child: Row(
-                  children: List.generate(4, (index) {
-                    final isSelected = selectedLevel == index;
-                    return Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedLevel = index;
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 7.sp),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: Container(
+                          width: 30.w,
+                          height: 30.w,
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xFF333333) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(6.sp),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color.fromARGB(255, 33, 224, 84),
+                                Color.fromARGB(255, 13, 89, 32),
+                              ],
+                            ),
+                            shape: BoxShape.circle,
                           ),
-                          child: Center(
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
+                        ),
+                        onPressed: () => Get.back(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(8.sp),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.selectSection(SectionOption.trainingProtocols);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 7.sp),
+                            decoration: BoxDecoration(
+                              color: controller.selectedSection == SectionOption.trainingProtocols
+                                  ? Colors.grey[700]
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8.sp),
+                                bottomLeft: Radius.circular(8.sp),
+                                topRight: controller.selectedSection == SectionOption.trainingProtocols
+                                    ? Radius.circular(8.sp)
+                                    : Radius.zero,
+                                bottomRight: controller.selectedSection == SectionOption.trainingProtocols
+                                    ? Radius.circular(8.sp)
+                                    : Radius.zero,
+                              ),
+                            ),
                             child: Text(
-                              'Level ${index + 1}',
+                              'Training protocols',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,
@@ -212,148 +120,508 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                           ),
                         ),
                       ),
-                    );
-                  }),
-                ),
-              ),
-            ),
-          ],
-          SizedBox(height: 10.sp),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
-              itemCount: tutorialItems.length,
-              itemBuilder: (context, index) {
-                final isExpanded = expandedItems.contains(index);
-                final itemName = tutorialItems[index];
-                final videoId = videoIds[itemName] ?? 'IF0kLstvX6M';
-
-                return Container(
-                  margin: EdgeInsets.only(bottom: 18.sp),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF191919),
-                        Color(0xFF252525),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isExpanded) {
-                              expandedItems.remove(index);
-                            } else {
-                              expandedItems.add(index);
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(16.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      itemName,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    if (!isExpanded) ...[
-                                      SizedBox(height: 4.h),
-                                      Text(
-                                        'See video',
-                                        style: TextStyle(
-                                          color: Colors.grey[400],
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.selectSection(SectionOption.swingFixes);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 7.sp),
+                            decoration: BoxDecoration(
+                              color: controller.selectedSection == SectionOption.swingFixes
+                                  ? Colors.grey[700]
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(6.sp),
+                                bottomRight: Radius.circular(6.sp),
+                                topLeft: controller.selectedSection == SectionOption.swingFixes
+                                    ? Radius.circular(6.sp)
+                                    : Radius.zero,
+                                bottomLeft: controller.selectedSection == SectionOption.swingFixes
+                                    ? Radius.circular(6.sp)
+                                    : Radius.zero,
                               ),
-                              Icon(
-                                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                            ),
+                            child: Text(
+                              'Swing fix videos',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
                                 color: Colors.white,
-                                size: 30.sp,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                      if (isExpanded) ...[
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                          child: Container(
-                            height: 200.h,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[800],
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Stack(
-                                children: [
-                                  YoutubePlayer(
-                                    controller: YoutubePlayerController(
-                                      initialVideoId: videoId,
-                                      flags: const YoutubePlayerFlags(
-                                        autoPlay: false,
-                                        mute: false,
-                                      ),
-                                    ),
-                                    showVideoProgressIndicator: true,
-                                    progressIndicatorColor: const Color(0xFF4CAF50),
-                                    progressColors: const ProgressBarColors(
-                                      playedColor: Color(0xFF4CAF50),
-                                      handleColor: Color(0xFF4CAF50),
-                                    ),
+                    ],
+                  ),
+                ),
+              ),
+              if (controller.selectedSection == SectionOption.trainingProtocols) ...[
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.sp),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius: BorderRadius.circular(8.sp),
+                    ),
+                    child: Row(
+                      children: List.generate(8, (index) {
+                        final level = index + 1;
+                        final isSelected = controller.selectedLevel == level;
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              controller.selectLevel(level);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 7.sp),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xFF333333) : Colors.transparent,
+                                borderRadius: BorderRadius.circular(6.sp),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'L$level',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  Positioned(
-                                    bottom: 8.h,
-                                    right: 8.w,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _openFullScreenVideo(context, videoId, itemName);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(8.w),
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.7),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.fullscreen,
-                                          color: Colors.white,
-                                          size: 20.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 16.h),
-                      ],
-                    ],
+                        );
+                      }),
+                    ),
                   ),
-                );
-              },
+                ),
+              ],
+              SizedBox(height: 10.sp),
+              Expanded(
+                child: controller.isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFF4CAF50),
+                        ),
+                      )
+                    : _buildContent(controller),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildContent(TutorialsController controller) {
+    if (controller.selectedSection == SectionOption.trainingProtocols) {
+      return _buildTrainingProtocols(controller);
+    } else {
+      return _buildSwingFixes(controller);
+    }
+  }
+
+  Widget _buildTrainingProtocols(TutorialsController controller) {
+    final selectedProtocol = controller.selectedProtocol;
+    final exercises = selectedProtocol?.exercises ?? [];
+    final warmUpVideoId = controller.warmUpVideoId;
+
+    return Builder(
+      builder: (context) => ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
+        itemCount: exercises.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _buildWarmUpTile(context, controller, warmUpVideoId);
+          }
+          final exercise = exercises[index - 1];
+          return _buildExerciseTile(context, controller, exercise);
+        },
+      ),
+    );
+  }
+
+  Widget _buildSwingFixes(TutorialsController controller) {
+    final swingFixes = controller.swingFixes;
+
+    return Builder(
+      builder: (context) => ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.h),
+        itemCount: swingFixes.length,
+        itemBuilder: (context, index) {
+          final swingFix = swingFixes[index];
+          return _buildSwingFixTile(context, controller, swingFix);
+        },
+      ),
+    );
+  }
+
+  Widget _buildWarmUpTile(BuildContext context, TutorialsController controller, String videoId) {
+    final isExpanded = controller.isWarmUpExpanded;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 18.sp),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF191919),
+            Color(0xFF252525),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              controller.toggleWarmUp();
+            },
+            child: Container(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Warm-Up',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (!isExpanded) ...[
+                          SizedBox(height: 4.h),
+                          Text(
+                            'See video',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.white,
+                    size: 30.sp,
+                  ),
+                ],
+              ),
             ),
           ),
+          if (isExpanded) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: Container(
+                height: 200.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Stack(
+                    children: [
+                      YoutubePlayer(
+                        controller: YoutubePlayerController(
+                          initialVideoId: videoId,
+                          flags: const YoutubePlayerFlags(
+                            autoPlay: false,
+                            mute: false,
+                          ),
+                        ),
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: const Color(0xFF4CAF50),
+                        progressColors: const ProgressBarColors(
+                          playedColor: Color(0xFF4CAF50),
+                          handleColor: Color(0xFF4CAF50),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8.h,
+                        right: 8.w,
+                        child: GestureDetector(
+                          onTap: () {
+                            _openFullScreenVideo(context, videoId, 'Warm-Up');
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.fullscreen,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseTile(BuildContext context, TutorialsController controller, Exercise exercise) {
+    final isExpanded = controller.selectedExercise?.id == exercise.id;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 18.sp),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF191919),
+            Color(0xFF252525),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              controller.toggleExercise(exercise);
+            },
+            child: Container(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          exercise.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (!isExpanded) ...[
+                          SizedBox(height: 4.h),
+                          Text(
+                            'See video',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.white,
+                    size: 30.sp,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isExpanded) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: Container(
+                height: 200.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Stack(
+                    children: [
+                      YoutubePlayer(
+                        controller: YoutubePlayerController(
+                          initialVideoId: exercise.videoId,
+                          flags: const YoutubePlayerFlags(
+                            autoPlay: false,
+                            mute: false,
+                          ),
+                        ),
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: const Color(0xFF4CAF50),
+                        progressColors: const ProgressBarColors(
+                          playedColor: Color(0xFF4CAF50),
+                          handleColor: Color(0xFF4CAF50),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8.h,
+                        right: 8.w,
+                        child: GestureDetector(
+                          onTap: () {
+                            _openFullScreenVideo(context, exercise.videoId, exercise.title);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.fullscreen,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSwingFixTile(BuildContext context, TutorialsController controller, SwingFix swingFix) {
+    final isExpanded = controller.selectedSwingFix?.id == swingFix.id;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 18.sp),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF191919),
+            Color(0xFF252525),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14.r),
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              controller.toggleSwingFix(swingFix);
+            },
+            child: Container(
+              padding: EdgeInsets.all(16.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          swingFix.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (!isExpanded) ...[
+                          SizedBox(height: 4.h),
+                          Text(
+                            'See video',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: Colors.white,
+                    size: 30.sp,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isExpanded) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: Container(
+                height: 200.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Stack(
+                    children: [
+                      YoutubePlayer(
+                        controller: YoutubePlayerController(
+                          initialVideoId: swingFix.videoId,
+                          flags: const YoutubePlayerFlags(
+                            autoPlay: false,
+                            mute: false,
+                          ),
+                        ),
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: const Color(0xFF4CAF50),
+                        progressColors: const ProgressBarColors(
+                          playedColor: Color(0xFF4CAF50),
+                          handleColor: Color(0xFF4CAF50),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8.h,
+                        right: 8.w,
+                        child: GestureDetector(
+                          onTap: () {
+                            _openFullScreenVideo(context, swingFix.videoId, swingFix.title);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.fullscreen,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
+          ],
         ],
       ),
     );

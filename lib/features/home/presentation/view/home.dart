@@ -3,7 +3,6 @@ import 'package:startup_repo/imports.dart';
 import '../controller/home_controller.dart';
 import '../../data/model/home_menu.dart';
 import '../../../../core/widgets/bottom_nav_bar.dart';
-import '../../../../core/widgets/training_calendar_slider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../auth/presentation/controller/auth_controller.dart';
 
@@ -53,42 +52,58 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildVideoPlayer(HomeController controller, BuildContext context) {
-    final videoId =
-        YoutubePlayer.convertUrlToId('https://www.youtube.com/watch?v=IF0kLstvX6M') ?? 'IF0kLstvX6M';
-    final youtubeController = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
+    final hasOriginalBaseline = controller.baselineExists;
 
-    final authController = Get.find<AuthController>();
-    final shouldShowSlider =
-        authController.isTrainedBefore && !authController.isSkipped && authController.hasBaselineMeasurements;
+    if (!hasOriginalBaseline) {
+      final videoId =
+          YoutubePlayer.convertUrlToId('https://www.youtube.com/watch?v=IF0kLstvX6M') ?? 'IF0kLstvX6M';
+      final youtubeController = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+        ),
+      );
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200.h,
+              child: _buildVideoCard(youtubeController),
+            ),
+            SizedBox(height: 16.h),
+            Container(
+              height: 1,
+              color: Colors.grey[600],
+            ),
+          ],
+        ),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
         children: [
           SizedBox(
-            height: 200.h,
-            child: shouldShowSlider
-                ? PageView(
-                    physics: const BouncingScrollPhysics(),
-                    padEnds: false,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 8.w),
-                        child: _buildTrainingCalendarCard(controller),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8.w),
-                        child: _buildVideoCard(youtubeController),
-                      ),
-                    ],
-                  )
-                : _buildVideoCard(youtubeController),
+            height: 160.h,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 10.w),
+                    child: _buildCalendarTile(controller),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10.w),
+                    child: _buildStatsTile(controller),
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 16.h),
           Container(
@@ -122,10 +137,135 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTrainingCalendarCard(HomeController controller) {
-    return TrainingCalendarSlider(
-      height: 200.h,
-      width: double.infinity,
+  Widget _buildCalendarTile(HomeController controller) {
+    return GestureDetector(
+      onTap: () => controller.openCalendar(),
+      child: Container(
+        height: 160.h,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF191919),
+              Color(0xFF252525),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        padding: EdgeInsets.all(14.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Calendar',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 7.h),
+            _buildCalendarPlaceholder(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCalendarPlaceholder() {
+    final daysIncluded = [
+      [false, false, false, true, true, true, true],
+      [true, true, true, true, true, true, true],
+      [true, true, true, true, true, true, true],
+      [true, true, true, true, true, true, true],
+      [true, true, true, true, true, true, false],
+    ];
+
+    return Column(
+      children: daysIncluded.map((row) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: row.map((value) {
+            return Container(
+              width: 6.w,
+              height: 6.w,
+              margin: EdgeInsets.all(1.5.w),
+              decoration: BoxDecoration(
+                color: value ? Colors.grey : Colors.grey.withOpacity(0.35),
+                shape: BoxShape.circle,
+              ),
+            );
+          }).toList(),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildStatsTile(HomeController controller) {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/progress');
+      },
+      child: Container(
+        height: 160.h,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF237537),
+              Color(0xFF33C258),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        padding: EdgeInsets.all(14.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Progress',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5.h),
+            if (controller.userStats.isNotEmpty) ...[
+              Text(
+                controller.speedDescription,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'SPEED: ${controller.speedDeltaDescription}',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.85),
+                  fontSize: 14.sp,
+                ),
+              ),
+              Text(
+                'DIST: ${controller.distanceDeltaDescription}',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.85),
+                  fontSize: 14.sp,
+                ),
+              ),
+            ] else
+              const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 

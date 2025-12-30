@@ -57,6 +57,14 @@ class _TrainedBeforeScreenState extends State<TrainedBeforeScreen> {
       isSkipped: false,
       hasBaselineMeasurements: _baselineMeasurements.isNotEmpty,
     );
+    if (_baselineMeasurements.isNotEmpty) {
+      controller.setBaselineInputs(
+        _baselineMeasurements.map((m) => {
+          'value': m.value,
+          'date': m.date,
+        }).toList(),
+      );
+    }
     Get.toNamed('/notification-permission');
   }
 

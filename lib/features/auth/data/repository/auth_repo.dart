@@ -137,29 +137,56 @@ class AuthRepoImpl implements AuthRepo {
     required String lastName,
     required DateTime dateOfBirth,
     required String gender,
-    required String handType,
+    required String handedness,
     required String handicap,
-    required String shaftLength,
-    required String preferredUnit,
+    required String shaft,
+    required String units,
     required int currentLevel,
     required int currentDay,
+    DateTime? lastRewardsUpdate,
+    String? fcmToken,
+    List<Map<String, dynamic>>? baselineInputs,
   }) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .update({
+      final updateData = <String, dynamic>{
         'firstName': firstName,
         'lastName': lastName,
         'dateOfBirth': Timestamp.fromDate(dateOfBirth),
         'gender': gender,
-        'handType': handType,
+        'handedness': handedness,
         'handicap': handicap,
-        'shaftLength': shaftLength,
-        'preferredUnit': preferredUnit,
+        'shaft': shaft,
+        'units': units,
         'currentLevel': currentLevel,
         'currentDay': currentDay,
-      });
+      };
+      if (lastRewardsUpdate != null) {
+        updateData['lastRewardsUpdate'] = Timestamp.fromDate(lastRewardsUpdate);
+      }
+      if (fcmToken != null && fcmToken.isNotEmpty) {
+        updateData['fcmToken'] = fcmToken;
+      }
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update(updateData);
+      if (baselineInputs != null && baselineInputs.isNotEmpty) {
+        final baselineInputsRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('baselineInputs');
+        for (final input in baselineInputs) {
+          final value = input['value'];
+          final date = input['date'] as DateTime?;
+          final intValue = value is String ? int.tryParse(value) : (value is int ? value : null);
+          if (intValue != null) {
+            await baselineInputsRef.add({
+              'timestamp': date != null ? Timestamp.fromDate(date) : FieldValue.serverTimestamp(),
+              'value': intValue,
+            });
+          }
+        }
+      }
     } catch (e) {
       throw Exception('Failed to save user details: ${e.toString()}');
     }

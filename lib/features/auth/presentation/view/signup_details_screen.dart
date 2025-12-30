@@ -1,8 +1,13 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:startup_repo/core/helper/navigation.dart';
+import 'package:startup_repo/core/theme/app_theme.dart';
 import 'package:startup_repo/core/widgets/sign_in_button.dart';
 import 'package:startup_repo/features/auth/presentation/controller/signup_details_controller.dart';
 import 'package:startup_repo/imports.dart';
+
+import '../../../../core/widgets/description.dart';
+import '../../../../core/widgets/gap.dart';
+import '../../../../core/widgets/header_text.dart';
 
 class SignupDetailsScreen extends StatelessWidget {
   const SignupDetailsScreen({super.key});
@@ -11,8 +16,8 @@ class SignupDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SignupDetailsController());
     return Scaffold(
-      backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: false,
+      backgroundColor: AppThemeColors.appBgColor,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(
           children: [
@@ -21,43 +26,32 @@ class SignupDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 0, bottom: 20),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 28.sp),
-                          onPressed: () {
-                            pop();
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 12.w, right: 12.w, top: 0, bottom: 20),
+                    //   child: Align(
+                    //     alignment: Alignment.topLeft,
+                    //     child: IconButton(
+                    //       icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 28.sp),
+                    //       onPressed: () {
+                    //         pop();
+                    //       },
+                    //       padding: EdgeInsets.zero,
+                    //       constraints: const BoxConstraints(),
+                    //     ),
+                    //   ),
+                    // ),
+                    gap(40.h),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 25.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Tell us more about\nyourself.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30.sp,
-                              fontWeight: FontWeight.bold,
-                              height: 1.1,
-                            ),
-                          ),
+
+                          headerText('Tell us more about'),
+                          headerText('yourself.'),
                           SizedBox(height: 24.h),
-                          Text(
-                            'This will help us generate a training program that is just right for you. All of your data is stored securely, and we never share it.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17.sp,
-                              height: 1.5,
-                            ),
-                          ),
+
+                          description('This will help us generate a training program that is just right for you. All of your data is stored securely, and we never share it.'),
                           SizedBox(height: 24.h),
                           _buildFormField(
                             label: 'First name',
