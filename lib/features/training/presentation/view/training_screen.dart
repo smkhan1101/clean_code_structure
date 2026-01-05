@@ -10,6 +10,8 @@ class TrainingScreen extends StatefulWidget {
   const TrainingScreen({super.key});
 
   static void show() {
+    final trainingController = Get.find<TrainingController>();
+    trainingController.loadTrainingData();
     showModalBottomSheet(
       context: Get.context!,
       isScrollControlled: true,

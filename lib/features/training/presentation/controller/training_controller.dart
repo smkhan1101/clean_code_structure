@@ -117,7 +117,9 @@ class TrainingController extends GetxController implements GetxService {
       _speedUnit = baselineData['speedUnit'] ?? 'MPH';
       _distanceUnit = baselineData['distanceUnit'] ?? 'YDS';
 
+      // Refresh home controller data first to get latest level/day
       final homeController = Get.find<HomeController>();
+      await homeController.loadHomeData();
       _currentLevel = homeController.currentLevel;
       _currentDay = homeController.currentDay;
 

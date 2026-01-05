@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../imports.dart';
+import '../../../training/domain/binding/training_binding.dart';
 import '../../data/model/calendar_item.dart';
 import '../../data/model/home_menu.dart';
 import '../../data/model/user_calendar_data.dart';
@@ -22,6 +24,9 @@ class HomeController extends GetxController implements GetxService {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  bool _isTrainingButtonLoading = true;
+  bool get isTrainingButtonLoading => _isTrainingButtonLoading;
 
   List<CalendarItem> _calendarData = [];
   List<CalendarItem> get calendarData => _calendarData;
@@ -85,12 +90,20 @@ class HomeController extends GetxController implements GetxService {
   @override
   void onInit() {
     super.onInit();
+    _loadStaticMenuItems();
     loadHomeData();
+  }
+
+  void _loadStaticMenuItems() {
+    _updateHomeMenuList();
+    update();
   }
 
   Future<void> loadHomeData() async {
     _isLoading = true;
     _isCalendarDataLoading = true;
+    _isTrainingButtonLoading = true;
+    _updateHomeMenuList();
     update();
 
     try {
@@ -106,10 +119,13 @@ class HomeController extends GetxController implements GetxService {
       _userStats = await homeService.getUserStats();
 
       _updateTrainingDay();
-      _updateHomeMenuList();
       _isCalendarDataLoading = false;
+      _isTrainingButtonLoading = false;
+      _updateHomeMenuList();
     } catch (e) {
       _isCalendarDataLoading = false;
+      _isTrainingButtonLoading = false;
+      _updateHomeMenuList();
     }
 
     _isLoading = false;
@@ -127,7 +143,16 @@ class HomeController extends GetxController implements GetxService {
   void _updateHomeMenuList() {
     final menuItems = <HomeMenu>[];
 
-    if (!_baselineExists) {
+    if (_isTrainingButtonLoading) {
+      menuItems.add(HomeMenu(
+        title: '',
+        description: '',
+        icon: Iconsax.arrow_right_3,
+        iconColor: Get.theme.colorScheme.surface,
+        selected: true,
+        isLoading: true,
+      ));
+    } else if (!_baselineExists) {
       menuItems.add(HomeMenu(
         title: 'Measure baseline',
         description: 'Let\'s calculate your swing speed!',
@@ -167,22 +192,6 @@ class HomeController extends GetxController implements GetxService {
       icon: Iconsax.arrow_right_3,
       iconColor: Get.theme.colorScheme.surface,
     ));
-
-    // if (!_isProPlan) {
-    //   menuItems.add(HomeMenu(
-    //     title: 'Upgrade to  the Pro Plan'.tr,
-    //     description: 'You\'re eligible for a 50% OFF'.tr,
-    //     icon: Iconsax.arrow_right_3,
-    //     iconColor: Get.theme.colorScheme.surface,
-    //   ));
-    // } else {
-    //   menuItems.add(HomeMenu(
-    //     title: 'your_pro_content'.tr,
-    //     description: 'your_pro_content_description'.tr,
-    //     icon: Iconsax.arrow_right_3,
-    //     iconColor: Get.theme.colorScheme.surface,
-    //   ));
-    // }
 
     menuItems.add(HomeMenu(
       title: 'Shop'.tr,
@@ -304,12 +313,22 @@ class HomeController extends GetxController implements GetxService {
             onPressed: () async {
               Get.back();
               try {
+                // Ensure TrainingService is available
+                if (!Get.isRegistered<TrainingService>()) {
+                  // Initialize TrainingBinding if not already done
+                  TrainingBinding().dependencies();
+                }
+                
                 final trainingService = Get.find<TrainingService>();
                 await trainingService.clearUnfinishedTraining();
-                refreshData();
-                TrainingScreen.show();
+                
+                // Refresh home data to update menu and show current level/day
+                await loadHomeData();
+                
+                // User stays on home screen - level/day will be displayed there
               } catch (e) {
-                showToast('Error clearing training');
+                debugPrint('Error clearing training: $e');
+                showToast('Error clearing training: ${e.toString()}');
               }
             },
             child: Text(

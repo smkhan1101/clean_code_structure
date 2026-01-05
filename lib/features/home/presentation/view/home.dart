@@ -312,46 +312,57 @@ class HomeScreen extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: menu.enabled ? () => controller.onMenuTap(index) : null,
+          onTap: menu.enabled && !(menu.isLoading) ? () => controller.onMenuTap(index) : null,
           borderRadius: BorderRadius.circular(12.r),
           child: Padding(
             padding: EdgeInsets.all(14.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            child: (menu.isLoading)
+                ? Center(
+                    child: SizedBox(
+                      height: 20.h,
+                      width: 20.w,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.0,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+                  )
+                : Row(
                     children: [
-                      Text(
-                        menu.title,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              menu.title,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (menu.description.isNotEmpty) ...[
+                              SizedBox(height: 0.h),
+                              Text(
+                                menu.description,
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 18.sp,
+                                  letterSpacing: 0.0,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
-                      if (menu.description.isNotEmpty) ...[
-                        SizedBox(height: 0.h),
-                        Text(
-                          menu.description,
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 18.sp,
-                            letterSpacing: 0.0,
-                          ),
+                      if (menu.enabled)
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 24.sp,
                         ),
-                      ],
                     ],
                   ),
-                ),
-                if (menu.enabled)
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-              ],
-            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/exercise_data.dart';
 import 'training_repo_interface.dart';
@@ -290,20 +291,30 @@ class TrainingRepoImpl implements TrainingRepo {
   @override
   Future<void> clearUnfinishedTraining() async {
     try {
+      // Clear local SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('unfinished_training');
       
+      // Clear Firestore training progress if user is logged in
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         try {
-          await FirebaseFirestore.instance
+          final progressDoc = FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
               .collection('training')
-              .doc('progress')
-              .delete();
+              .doc('progress');
+          
+          // Check if document exists before deleting
+          final docSnapshot = await progressDoc.get();
+          if (docSnapshot.exists) {
+            await progressDoc.delete();
+          }
         } catch (e) {
-          // Ignore Firestore errors if local clear succeeds
+          // Log Firestore error but don't fail if local clear succeeded
+          if (kDebugMode) {
+            print('Firestore clear error (non-critical): $e');
+          }
         }
       }
     } catch (e) {
