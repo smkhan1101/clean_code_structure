@@ -1,3 +1,4 @@
+import 'package:startup_repo/core/widgets/app_loader.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/training_controller.dart';
 import '../../../../core/widgets/loading.dart';
@@ -84,7 +85,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
               color: Colors.black,
               borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
             ),
-            child: Center(child: Loading()),
+            child: Center(child: AppLoader()),
           );
         }
 
@@ -212,12 +213,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
       return const SizedBox(
         width: 36,
         height: 36,
-        child: Center(
-          child: CircularProgressIndicator(
-            color: Colors.white,
-            strokeWidth: 2,
-          ),
-        ),
+        child: AppLoader(),
+        // child: Center(
+        //   child: CircularProgressIndicator(
+        //     color: Colors.white,
+        //     strokeWidth: 2,
+        //   ),
+        // ),
       );
     }
 
@@ -684,12 +686,13 @@ class _TrainingScreenState extends State<TrainingScreen> {
           color: Colors.grey[900],
           borderRadius: BorderRadius.circular(16.r),
         ),
-        child: Center(
-          child: const CircularProgressIndicator(
-            color: Colors.green,
-            strokeWidth: 3.0,
-          ),
-        ),
+        child: AppLoader(),
+        // child: Center(
+        //   child: const CircularProgressIndicator(
+        //     color: Colors.green,
+        //     strokeWidth: 3.0,
+        //   ),
+        // ),
       );
     }
 
@@ -1345,12 +1348,13 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
           color: Colors.grey[900],
           borderRadius: BorderRadius.circular(12.r),
         ),
-        child: Center(
-          child: const CircularProgressIndicator(
-            color: Colors.green,
-            strokeWidth: 3.0,
-          ),
-        ),
+        child: AppLoader(),
+        // child: Center(
+        //   child: const CircularProgressIndicator(
+        //     color: Colors.green,
+        //     strokeWidth: 3.0,
+        //   ),
+        // ),
       );
     }
 

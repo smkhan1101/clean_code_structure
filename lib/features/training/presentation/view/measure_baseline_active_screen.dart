@@ -5,13 +5,27 @@ import '../../../../imports.dart';
 import '../controller/measure_baseline_active_controller.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class MeasureBaselineActiveScreen extends StatelessWidget {
+class MeasureBaselineActiveScreen extends StatefulWidget {
   const MeasureBaselineActiveScreen({super.key});
 
   static void show() {
     Get.to(() => const MeasureBaselineActiveScreen());
   }
 
+  @override
+  State<MeasureBaselineActiveScreen> createState() => _MeasureBaselineActiveScreenState();
+}
+
+class _MeasureBaselineActiveScreenState extends State<MeasureBaselineActiveScreen> {
+  var controller = Get.find<MeasureBaselineActiveController>();
+   @override
+  void initState() {
+    super.initState();
+
+    // ✅ Only once when screen is pushed
+    controller.resetFlow();             
+    controller.startInitialCountdown();
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MeasureBaselineActiveController>(
@@ -165,7 +179,10 @@ class MeasureBaselineActiveScreen extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
+            controller.resetFlow();             
+    controller.startInitialCountdown();
             controller.startSwingSequence();
+
           },
           child: Text(
             'START',
@@ -309,6 +326,7 @@ class MeasureBaselineActiveScreen extends StatelessWidget {
           elevation: 0,
         ),
         child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [
@@ -347,131 +365,302 @@ class MeasureBaselineActiveScreen extends StatelessWidget {
       color: Colors.black,
       child: _buildSwingSpeedInputView(controller),
     );
-  }
+  } 
+   
+Widget _buildSwingSpeedInputView(MeasureBaselineActiveController controller) {
+  // 🚀 START COUNTDOWN ON FIRST BUILD
+  // Use a flag to avoid double animation on first frame
+  // WidgetsBinding.instance.addPostFrameCallback((_) {
+  //    controller.resetFlow();             
+  // controller.startInitialCountdown();
+  // //   if (!controller.countdownStarted) {
+       
+  // //     controller.resetFlow();             
+  // // controller.startInitialCountdown();
+  // //   }
+  // });
 
-  Widget _buildSwingSpeedInputView(MeasureBaselineActiveController controller) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: const Color(0xFF4CAF50),
-              child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'SWING',
-                      style: TextStyle(
-                        fontSize: 32.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
+  return Scaffold(
+    backgroundColor: Colors.black,
+    body: Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            width: double.infinity,
+            color: const Color(0xFF4CAF50),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // ✅ AnimatedSwitcher for countdown
+                  if (controller.showCountdown)
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(
+                          scale: CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutBack,
+                          ),
+                          child: FadeTransition(opacity: animation, child: child),
+                        );
+                      },
+                      child: Text(
+                        controller.animatedSwingSpeed.toString(),
+                        key: ValueKey(controller.animatedSwingSpeed),
+                        style: TextStyle(
+                          fontSize: 64.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+
+                  // ✅ Animate SWING only once
+                  if (controller.showSwingText && !controller.swingAnimationPlayed)
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: Text(
+                        'SWING',
+                        key: const ValueKey('swing_animation'),
+                        style: TextStyle(
+                          fontSize: 48.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 3,
+                        ),
+                      ),
+                    ),
+
+                  // ✅ Main UI: show static SWING + 0 MPH + Confirm
+                  if (controller.showMainUI)
+                    Column(
                       children: [
+                        // Static SWING (no animation, prevents double bounce)
                         Text(
-                          controller.currentSwingSpeed.isEmpty ? '0' : controller.currentSwingSpeed,
+                          'SWING',
                           style: TextStyle(
-                            fontSize: 64.sp,
+                            fontSize: 48.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
+                            letterSpacing: 3,
                           ),
                         ),
-                        SizedBox(width: 8.w),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 12.h),
+                        SizedBox(height: 16.h),
+                  Row(
+  mainAxisAlignment: MainAxisAlignment.center, // center horizontal alignment
+  crossAxisAlignment: CrossAxisAlignment.center, // center vertical alignment
+  mainAxisSize: MainAxisSize.min, // tight row, no extra space
+  children: [
+    // 1️⃣ Editable TextField inside green container
+    Flexible(
+      child: Container(
+        width: 150.w,
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          // color: const Color(0xFF4CAF50), 
+            //  color: Colors.amber, // green background
+          borderRadius: BorderRadius.circular(12.r), 
+        ),
+        child: TextField(
+          // controller: controller.swingSpeedController,
+          keyboardType: TextInputType.number,
+          style: TextStyle(
+            fontSize: 64.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+          cursorColor: Colors.transparent,
+          decoration: InputDecoration(
+            hintText: '0',
+            hintStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 64.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            border: InputBorder.none,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            fillColor: Colors.transparent,
+            filled: true,
+            isDense: true,
+            contentPadding: EdgeInsets.zero,
+          ),
+          onChanged: (value) {
+            controller.setSwingSpeed(value);
+          },
+        ),
+      ),
+    ),
+
+    // SizedBox(width: 8.w), // gap between TextField and unit text
+
+    // 2️⃣ Unit text
+    Flexible(
+      child: Text(
+        controller.speedUnit,
+        style: TextStyle(
+          // fontSize: 24.sp,
+          fontSize: 30.sp,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          
+        ),
+      ),
+    ),
+  ],
+),
+
+
+
+
+                        // Speed row
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           crossAxisAlignment: CrossAxisAlignment.end,
+//                           children: [
+//                             // Text(
+//                             //   controller.currentSwingSpeed,
+//                             //   style: TextStyle(
+//                             //     fontSize: 64.sp,
+//                             //     fontWeight: FontWeight.bold,
+//                             //     color: Colors.white,
+//                             //   ),
+//                             // ),
+//                            Expanded(child: Container(
+//         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+//         decoration: BoxDecoration(
+//           color: const Color(0xFF4CAF50), // green background
+//           borderRadius: BorderRadius.circular(12.r),
+//         ),
+//         child: TextField(
+//   // controller: controller.swingSpeedController,
+//   keyboardType: TextInputType.number,
+//   style: TextStyle(
+//     fontSize: 64.sp,
+//     fontWeight: FontWeight.bold,
+//     color: Colors.white, // entered text color
+//   ),
+//   textAlign: TextAlign.center,
+//   cursorColor: Colors.transparent, // cursor visible
+//   decoration: InputDecoration(
+//     hintText: '0', // placeholder
+//     hintStyle: TextStyle(
+//       color: Colors.white, // hint text color
+//       fontSize: 64.sp,
+//       fontWeight: FontWeight.bold,
+//     ),
+//     border: InputBorder.none,
+//     enabledBorder: OutlineInputBorder(
+//       borderSide: BorderSide(color: Colors.transparent),
+//     ),
+//     focusedBorder: OutlineInputBorder(
+//       borderSide: BorderSide(color: Colors.transparent),
+//     ),
+//     disabledBorder: OutlineInputBorder(
+//       borderSide: BorderSide(color: Colors.transparent),
+//     ),
+//     fillColor: Colors.transparent,
+//     filled: true,
+//     isDense: false,
+//     contentPadding: EdgeInsets.zero,
+//   ),
+//   onChanged: (value) { 
+//     print('swing value is : $value');
+//     controller.setSwingSpeed(value);
+//   },
+// )
+// ,
+// //         child: TextField(
+// //     // controller: controller.swingSpeedController,
+// //   keyboardType: TextInputType.number,
+  
+// //   style: TextStyle(
+// //     fontSize: 64.sp,
+// //     fontWeight: FontWeight.bold,
+// //     color: Colors.white, // text visible
+// //   ),
+// //   textAlign: TextAlign.center,
+// //   cursorColor: Colors.transparent,
+  
+// //   decoration: InputDecoration(
+// //     border: InputBorder.none, // default border none
+// //     enabledBorder: OutlineInputBorder(
+// //       borderSide: BorderSide(color: Colors.transparent),
+// //     ),
+// //     focusedBorder: OutlineInputBorder(
+// //       borderSide: BorderSide(color: Colors.transparent),
+// //     ),
+// //     disabledBorder: OutlineInputBorder(
+// //       borderSide: BorderSide(color: Colors.transparent),
+// //     ),
+// //     fillColor: Colors.transparent,
+// //     filled: true,
+// //     isDense: true,
+// //     contentPadding: EdgeInsets.zero,
+// //   ),
+// //   onChanged: (value) { 
+// //     print('swing value is : $value');
+// //       controller.setSwingSpeed(value);
+// //   },
+// // ),
+
+//       ),
+//       ),
+//                             // SizedBox(width: 8.w),
+//                             Expanded(
+//                               child: Padding(
+//                                 padding: EdgeInsets.only(bottom: 12.h),
+//                                 child: Text(
+//                                   controller.speedUnit,
+//                                   style: TextStyle(
+//                                     fontSize: 24.sp,
+//                                     fontWeight: FontWeight.w500,
+//                                     color: Colors.white,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+                        SizedBox(height: 24.h),
+
+                        // Confirm button
+                        GestureDetector(
+                          onTap: controller.confirmSwingSpeed,
                           child: Text(
-                            controller.speedUnit,
+                            'Confirm',
                             style: TextStyle(
-                              fontSize: 24.sp,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
                               color: Colors.white,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.white,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 24.h),
-                    GestureDetector(
-                      onTap: () {
-                        controller.confirmSwingSpeed();
-                      },
-                      child: Text(
-                        'Confirm',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: Colors.grey[900],
-              child: SafeArea(
-                top: false,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: GridView.builder(
-                        padding: EdgeInsets.all(20.sp),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 16.w,
-                          mainAxisSpacing: 16.h,
-                          childAspectRatio: 1.2,
-                        ),
-                        itemCount: 12,
-                        itemBuilder: (context, index) {
-                          if (index == 9) {
-                            return _buildKeypadButton(
-                              icon: Icons.language,
-                              onTap: () {},
-                            );
-                          } else if (index == 10) {
-                            return _buildKeypadButton(
-                              text: '0',
-                              onTap: () => controller.addSwingSpeedDigit('0'),
-                            );
-                          } else if (index == 11) {
-                            return _buildKeypadButton(
-                              icon: Icons.backspace,
-                              onTap: controller.removeSwingSpeedDigit,
-                            );
-                          } else {
-                            final number = (index + 1).toString();
-                            return _buildKeypadButton(
-                              text: number,
-                              onTap: () => controller.addSwingSpeedDigit(number),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
+// Widget _buildSwingSpeedInputView(MeasureBaselineActiveController controller) {
 
   Widget _buildKeypadButton({
     String? text,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:startup_repo/core/widgets/app_loader.dart';
 import '../../../../imports.dart';
 import '../controller/training_active_controller.dart';
 import '../controller/swing_sheet_controller.dart';
@@ -93,9 +94,10 @@ class _TrainingActiveScreenState extends State<TrainingActiveScreen> {
   Widget _buildStandardView(TrainingActiveController controller) {
     if (controller.currentAction == null) {
       return const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFF4CAF50),
-        ),
+        child: AppLoader(),
+        // child: CircularProgressIndicator(
+        //   color: Color(0xFF4CAF50),),
+        
       );
     }
 

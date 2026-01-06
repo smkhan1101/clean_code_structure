@@ -139,6 +139,16 @@ class HomeController extends GetxController implements GetxService {
       _trainingDay = '';
     }
   }
+  bool isVideoLoading = true;
+
+  void onVideoReady() {
+    isVideoLoading = false;
+    update();
+  }
+
+  void resetVideoLoader() {
+    isVideoLoading = true;
+  }
 
   void _updateHomeMenuList() {
     final menuItems = <HomeMenu>[];

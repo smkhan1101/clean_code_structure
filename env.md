@@ -18,7 +18,7 @@ We have created a repository that allows developers to manage Android configurat
 
    ```properties
    # App name
-   APP_NAME=Flutter Anadconda
+   APP_NAME=Rypstick
 
    # Android Configuration
    BUNDLE_ID_ANDROID=com.example.flutteranadconda

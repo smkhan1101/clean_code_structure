@@ -1,3 +1,4 @@
+import 'package:startup_repo/core/widgets/app_loader.dart';
 import 'package:startup_repo/imports.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../controller/tutorials_controller.dart';
@@ -205,9 +206,13 @@ class TutorialsScreen extends StatelessWidget {
               Expanded(
                 child: controller.isLoading
                     ? Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF4CAF50),
-                        ),
+                      child: SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: AppLoader()),
+                        // child: CircularProgressIndicator(
+                        //   color: Color(0xFF4CAF50),
+                        // ),
                       )
                     : _buildContent(controller),
               ),

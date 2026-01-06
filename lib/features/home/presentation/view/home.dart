@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:startup_repo/core/widgets/app_loader.dart';
 import 'package:startup_repo/imports.dart';
 import '../controller/home_controller.dart';
 import '../../data/model/home_menu.dart';
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             SizedBox(
               height: 200.h,
-              child: _buildVideoCard(youtubeController),
+              child: _buildVideoCard(youtubeController, controller),
             ),
             SizedBox(height: 16.h),
             Container(
@@ -115,27 +116,92 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVideoCard(YoutubePlayerController youtubeController) {
-    return Container(
-      height: 200.h,
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.r),
-        child: YoutubePlayer(
-          controller: youtubeController,
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: const Color(0xFF4CAF50),
-          progressColors: const ProgressBarColors(
-            playedColor: Color(0xFF4CAF50),
-            handleColor: Color(0xFF4CAF50),
-          ),
-        ),
-      ),
-    );
-  }
+Widget _buildVideoCard(
+  YoutubePlayerController youtubeController,
+  HomeController controller,
+) {
+  return Container(
+    height: 200.h,
+    decoration: BoxDecoration(
+      color: Colors.grey[900],
+      borderRadius: BorderRadius.circular(12.r),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(12.r),
+      child: Stack(
+  alignment: Alignment.center,
+  children: [
+    YoutubePlayer(
+      controller: youtubeController,
+      showVideoProgressIndicator: false,
+      onReady: controller.onVideoReady,
+    ),
+
+    /// 👇 Overlay always above YouTube iframe
+    GetBuilder<HomeController>(
+      builder: (_) {
+        return controller.isVideoLoading
+            ? Container(
+                color: Colors.black, // 👈 hides white spinner
+                child: const AppLoader(size: 40 , loaderColor: Colors.white,showBackground: false,),
+              )
+            : const SizedBox();
+      },
+    ),
+  ],
+),
+
+      // child: Stack(
+      //   alignment: Alignment.center,
+      //   children: [
+      //     YoutubePlayer(
+      //       controller: youtubeController,
+      //       showVideoProgressIndicator: false, // ❌ disable default loader
+      //       onReady: () {
+      //         controller.onVideoReady(); // ✅ hide AppLoader
+      //       },
+      //       progressIndicatorColor: const Color(0xFF4CAF50),
+      //       progressColors: const ProgressBarColors(
+      //         playedColor: Color(0xFF4CAF50),
+      //         handleColor: Color(0xFF4CAF50),
+      //       ),
+      //     ),
+
+      //     /// 🔥 AppLoader overlay
+      //     GetBuilder<HomeController>(
+      //       builder: (_) {
+      //         return controller.isVideoLoading
+      //             ? const AppLoader(size: 80 ,loaderColor: Colors.white, )
+      //             : const SizedBox();
+      //       },
+      //     ),
+      //   ],
+      // ),
+    ),
+  );
+}
+
+  // Widget _buildVideoCard(YoutubePlayerController youtubeController) {
+  //   return Container(
+  //     height: 200.h,
+  //     decoration: BoxDecoration(
+  //       color: Colors.grey[900],
+  //       borderRadius: BorderRadius.circular(12.r),
+  //     ),
+  //     child: ClipRRect(
+  //       borderRadius: BorderRadius.circular(12.r),
+  //       child: YoutubePlayer(
+  //         controller: youtubeController,
+  //         showVideoProgressIndicator: true,
+  //         progressIndicatorColor: const Color(0xFF4CAF50),
+  //         progressColors: const ProgressBarColors(
+  //           playedColor: Color(0xFF4CAF50),
+  //           handleColor: Color(0xFF4CAF50),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildCalendarTile(HomeController controller) {
     return GestureDetector(
@@ -258,11 +324,24 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ] else
-              const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              ),
+
+            // AppLoader(size: 20,),
+            Center(
+                    child: SizedBox(
+                      height: 25.h,
+                      width: 25.w,
+                      child: AppLoader(size: 30,),
+                      // child: CircularProgressIndicator(
+                      //   strokeWidth: 2.0,
+                      //   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      // ),
+                    ),
+                  ),
+              // const Center(
+              //   child: CircularProgressIndicator(
+              //     color: Colors.white,
+              //   ),
+              // ),
           ],
         ),
       ),
@@ -288,25 +367,30 @@ class HomeScreen extends StatelessWidget {
     final useGradient = isFirstItem || isUpgradeItem;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
+      margin: EdgeInsets.only(bottom: 8.h),
       decoration: BoxDecoration(
-        gradient: useGradient
-            ? const LinearGradient(
+        gradient: 
+                LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
+                colors: useGradient ? [
                   Color(0xFF237537),
                   Color(0xFF33C258),
-                ],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF191919),
-                  Color(0xFF252525),
-                ],
-              ),
+                ] : [
+                  const Color.fromARGB(255, 39, 39, 39), 
+                  const Color.fromARGB(255, 58, 57, 57),  
+ 
+                ], 
+              )  ,
+               
+            // : const LinearGradient(
+            //     begin: Alignment.topLeft,  
+            //     end: Alignment.bottomRight,
+            //     colors: [
+            //       Color(0xFF191919),
+            //       Color(0xFF252525),
+            //     ],
+            //   ), 
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Material(
@@ -315,16 +399,17 @@ class HomeScreen extends StatelessWidget {
           onTap: menu.enabled && !(menu.isLoading) ? () => controller.onMenuTap(index) : null,
           borderRadius: BorderRadius.circular(12.r),
           child: Padding(
-            padding: EdgeInsets.all(14.w),
+            padding: EdgeInsets.symmetric(horizontal: 14.w , vertical: 15.w),
             child: (menu.isLoading)
                 ? Center(
                     child: SizedBox(
-                      height: 20.h,
-                      width: 20.w,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
+                      height: 25.h,
+                      width: 25.w,
+                      child: AppLoader(size: 30,),
+                      // child: CircularProgressIndicator(
+                      //   strokeWidth: 2.0,
+                      //   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      // ),
                     ),
                   )
                 : Row(
@@ -337,7 +422,7 @@ class HomeScreen extends StatelessWidget {
                               menu.title,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20.sp,
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -347,8 +432,8 @@ class HomeScreen extends StatelessWidget {
                                 menu.description,
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.8),
-                                  fontSize: 18.sp,
-                                  letterSpacing: 0.0,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],

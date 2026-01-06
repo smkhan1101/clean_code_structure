@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:startup_repo/core/widgets/app_loader.dart';
 import 'package:startup_repo/core/widgets/loading.dart';
 import 'package:startup_repo/imports.dart';
 import 'core/theme/design_helper.dart';
@@ -79,7 +80,8 @@ class MyApp extends StatelessWidget {
               ),
               navigatorObservers: [FlutterSmartDialog.observer],
               builder: FlutterSmartDialog.init(
-                loadingBuilder: (string) => const LoadingWidget(),
+                // loadingBuilder: (string) => const LoadingWidget(),
+                loadingBuilder: (string) => const AppLoader(size: 20 ,),
                 builder: (context, child) {
                   return ScrollConfiguration(
                     behavior: CustomScrollBehavior(),

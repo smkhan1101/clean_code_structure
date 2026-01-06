@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:startup_repo/features/home/presentation/controller/home_controller.dart';
+import 'package:startup_repo/features/training/presentation/controller/measure_baseline_active_controller.dart';
 import '../../../../imports.dart';
 import '../../../../core/widgets/sign_in_button.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'measure_baseline_active_screen.dart';
 import 'alternative_baseline_input_screen.dart';
+import 'package:startup_repo/core/widgets/app_loader.dart';
+ 
 
 class MeasureBaselineScreen extends StatefulWidget {
   const MeasureBaselineScreen({super.key});
@@ -80,7 +84,13 @@ class _MeasureBaselineScreenState extends State<MeasureBaselineScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-                  _buildTutorialView(),
+                    _buildTutorialView(),
+//                   GetBuilder<HomeController>(
+//   builder: (controller) {
+//     return _buildTutorialView(controller);
+//   },
+// ),
+
                   SizedBox(height: 20.h),
                   _buildInfoView(),
                   SizedBox(height: 20.h),
@@ -140,7 +150,64 @@ class _MeasureBaselineScreenState extends State<MeasureBaselineScreen> {
         ],
       ),
     );
-  }
+  } 
+
+//   Widget _buildTutorialView(HomeController controller) {
+//   if (_videoController == null) {
+//     return Container(
+//       height: 200.h,
+//       decoration: BoxDecoration(
+//         color: Colors.grey[900],
+//         borderRadius: BorderRadius.circular(12.r),
+//       ),
+//       child: const Center(
+//         child: AppLoader(
+//           size: 40,
+//           loaderColor: Colors.white,
+//           showBackground: false,
+//         ),
+//       ),
+//     );
+//   }
+
+//   return Container(
+//     height: 200.h,
+//     decoration: BoxDecoration(
+//       color: Colors.grey[900],
+//       borderRadius: BorderRadius.circular(12.r),
+//     ),
+//     child: ClipRRect(
+//       borderRadius: BorderRadius.circular(12.r),
+//       child: Stack(
+//         alignment: Alignment.center,
+//         children: [
+//           YoutubePlayer(
+//             controller: _videoController!,
+//             showVideoProgressIndicator: false, // ❌ disable default loader
+//             onReady: controller.onVideoReady, // ✅ hide AppLoader
+//           ),
+
+//           /// 👇 Custom loader overlay
+//           GetBuilder<HomeController>(
+//             builder: (_) {
+//               return controller.isVideoLoading
+//                   ? Container(
+//                       color: Colors.black, // hides YouTube white spinner
+//                       child: const AppLoader(
+//                         size: 40,
+//                         loaderColor: Colors.white,
+//                         showBackground: false,
+//                       ),
+//                     )
+//                   : const SizedBox();
+//             },
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+
 
   Widget _buildTutorialView() {
     if (_videoController == null) {
@@ -436,16 +503,22 @@ class _SlideToStartButtonState extends State<_SlideToStartButton> {
                     if (!_isCompleted && widget.enabled) {
                       setState(() {
                         _dragPosition = (_dragPosition + details.delta.dx).clamp(0.0, maxDrag);
+                      
                         if (_dragPosition >= maxDrag - 5) {
+
                           _isCompleted = true;
+                          Get.find<MeasureBaselineActiveController>()
+                          
+            .startSwingSequence();
                           widget.onSlideComplete();
-                        }
+                        } 
                       });
                     }
                   },
-                  onHorizontalDragEnd: (details) {
+                  onHorizontalDragEnd: (details) { 
                     if (!_isCompleted) {
                       setState(() {
+                          
                         _dragPosition = 0.0;
                       });
                     }
@@ -679,10 +752,11 @@ class _WarmUpScreenState extends State<_WarmUpScreen> {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Center(
-          child: const CircularProgressIndicator(
-            color: Colors.green,
-            strokeWidth: 3.0,
-          ),
+           child: AppLoader(),
+          // child: const CircularProgressIndicator(
+          //   color: Colors.green,
+          //   strokeWidth: 3.0,
+          // ),
         ),
       );
     }
